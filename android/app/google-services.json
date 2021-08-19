@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "537721953352",
+    "project_id": "ether-wallet-56723",
+    "storage_bucket": "ether-wallet-56723.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:537721953352:android:133e118afc4c2546508c7d",
+        "android_client_info": {
+          "package_name": "com.ahmedafridee.ether_wallet_flutter_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "537721953352-52mak3g5d56r9alg41ftq2cn79b46q52.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ahmedafridee.ether_wallet_flutter_app",
+            "certificate_hash": "551d0f1adba9bce89221694bf704848d4c67f670"
+          }
+        },
+        {
+          "client_id": "537721953352-d70ojh7c7k4l1sq6gsaivq4ns56a6vk4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6wTjM_rqs5ky0Oq77VjoIfRyym_3R3tM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "537721953352-d70ojh7c7k4l1sq6gsaivq4ns56a6vk4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
