@@ -11,7 +11,7 @@ class LocalAuthController extends GetxController{
     bool canCheckBiometrics  = await localAuth.canCheckBiometrics;
 
     didAuthenticate = await localAuth.authenticate(
-        localizedReason: 'Please authenticate to show account balance',
+        localizedReason: 'Please authenticate to get inside your wallet',
         biometricOnly: canCheckBiometrics);
     update();
   }

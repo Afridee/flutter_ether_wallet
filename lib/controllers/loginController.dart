@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ether_wallet_flutter_app/models/EncryptedEthAccountModel.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:get/get.dart';
@@ -24,9 +28,11 @@ class LoginController extends GetxController{
 
     final AccessToken? accessToken = await FacebookAuth.instance.accessToken;
 
-    final authResult;
 
     if(accessToken!=null){
+
+      final authResult;
+
       authResult = await  fba.FirebaseAuth.instance.signInWithCredential(
         fba.FacebookAuthProvider.credential(accessToken.token),
       );
@@ -37,19 +43,33 @@ class LoginController extends GetxController{
       final CollectionReference users = FirebaseFirestore.instance.collection('Users');
       users.doc(authResult.user.uid).set(userObj);
 
-      Map<dynamic, dynamic>? userObj_temp = userObj;
+      Map<dynamic, dynamic>? userObjTemp = userObj;
 
-      userObjBox.put("userObj", userObj_temp ?? {});
+      userObjBox.put("userObj", userObjTemp ?? {});
 
       final status = await OneSignal.shared.getDeviceState();
       final String? osUserID = status?.userId;
 
-      print("one signal userID: " + osUserID.toString());
-
       final CollectionReference oneSignalIds = FirebaseFirestore.instance.collection('Users/'+ authResult.user.uid +'/OneSignalIds');
 
-      oneSignalIds.doc(osUserID).set({
-        "data" :  osUserID
+      await oneSignalIds.doc(osUserID).get().then((doc) async{
+        if(doc.exists){
+
+          oneSignalIds.doc(osUserID).set({
+            "data" :  osUserID
+          });
+
+          QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Users/'+ authResult.user.uid +'/EthAccounts').get();
+
+          if(querySnapshot.docs.length>0){
+            for (int i = 0; i < querySnapshot.docs.length; i++) {
+              EncryptedEthAccountModel model =
+              EncryptedEthAccountModel.fromJson(querySnapshot.docs[i].get('data'));
+              print(model.address);
+              ///TODO: ADD the webhooks
+            }
+          }
+        }
       });
     }
   }
