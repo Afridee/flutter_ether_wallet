@@ -1,8 +1,9 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ether_wallet_flutter_app/functions/createWebhookForAddressActivity.dart';
 import 'package:ether_wallet_flutter_app/models/EncryptedEthAccountModel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:get/get.dart';
@@ -53,7 +54,7 @@ class LoginController extends GetxController{
       final CollectionReference oneSignalIds = FirebaseFirestore.instance.collection('Users/'+ authResult.user.uid +'/OneSignalIds');
 
       await oneSignalIds.doc(osUserID).get().then((doc) async{
-        if(doc.exists){
+        if(!doc.exists){
 
           oneSignalIds.doc(osUserID).set({
             "data" :  osUserID
@@ -62,12 +63,15 @@ class LoginController extends GetxController{
           QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Users/'+ authResult.user.uid +'/EthAccounts').get();
 
           if(querySnapshot.docs.length>0){
+            List<String> adressList = [];
+
             for (int i = 0; i < querySnapshot.docs.length; i++) {
-              EncryptedEthAccountModel model =
-              EncryptedEthAccountModel.fromJson(querySnapshot.docs[i].get('data'));
-              print(model.address);
-              ///TODO: ADD the webhooks
+              EncryptedEthAccountModel model = EncryptedEthAccountModel.fromJson(querySnapshot.docs[i].get('data'));
+              adressList.add(model.address);
             }
+
+            var response = createWebhookAPI(appId: dotenv.env['ALCHEMY_MAINNET_APP_ID'].toString(), playerId: osUserID.toString(), ethAddresses: adressList);
+            var response2 = createWebhookAPI(appId: dotenv.env['ALCHEMY_RINKEBY_APP_ID'].toString(), playerId: osUserID.toString(), ethAddresses: adressList);
           }
         }
       });

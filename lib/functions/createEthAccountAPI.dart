@@ -2,10 +2,9 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
-  Future<Map> createEthAccountAPI() async{
+  Future<Map<String, dynamic>> createEthAccountAPI() async{
 
   final String baseUrl = dotenv.env['BASE_URL'].toString();
-
   var url = Uri.parse(baseUrl + '/accounts/create');
 
   var response = await http.post(
@@ -13,7 +12,7 @@ import 'package:http/http.dart' as http;
       body: jsonEncode({"password": "password"}));
 
   if(response.statusCode == 200){
-    Map account = jsonDecode(response.body);
+    Map<String, dynamic> account = jsonDecode(response.body);
     return account;
   }else{
     return {

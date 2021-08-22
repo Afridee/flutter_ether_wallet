@@ -1,6 +1,7 @@
 import 'package:ether_wallet_flutter_app/controllers/localAuthenticationController.dart';
 import 'package:ether_wallet_flutter_app/controllers/loginController.dart';
 import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
+import 'package:ether_wallet_flutter_app/functions/getAllWebhooks.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -59,7 +60,7 @@ class AuthenticationPage extends StatelessWidget {
             height: MediaQuery.of(context).size.height,
             color: Colors.green,
             child: Center(
-              child: TextButton(onPressed: () {
+              child: TextButton(onPressed: () async{
                 walletController.createAEthAccount();
               }, child: Text("check Api"))
             ),
