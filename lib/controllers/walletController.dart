@@ -1,3 +1,4 @@
+import 'package:ether_wallet_flutter_app/functions/createWebhookForAddressActivity.dart';
 import 'package:ether_wallet_flutter_app/functions/getAllWebhooks.dart';
 import 'package:ether_wallet_flutter_app/functions/updateWebhookAddresses.dart';
 import 'package:ether_wallet_flutter_app/models/EncryptedEthAccountModel.dart';
@@ -47,9 +48,13 @@ class WalletController extends GetxController {
         List<String> oneSignalIds = [];
 
         for (int i = 0; i < querySnapshot.docs.length; i++) {
-
+           oneSignalIds.add(querySnapshot.docs[i].get('data'));
         }
-        ///TODO: more work to go
+
+        oneSignalIds.forEach((oneSignalId) async{
+          var response = await createWebhookForAddressActivity(appId: dotenv.env['ALCHEMY_MAINNET_APP_ID'].toString(), playerId: oneSignalId.toString(), ethAddresses: [accountModel.address]);
+          var response2 = await createWebhookForAddressActivity(appId: dotenv.env['ALCHEMY_RINKEBY_APP_ID'].toString(), playerId: oneSignalId.toString(), ethAddresses: [accountModel.address]);
+        });
       }
     } else {
       print(

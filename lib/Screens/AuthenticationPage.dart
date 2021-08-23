@@ -1,10 +1,10 @@
+import 'package:ether_wallet_flutter_app/Screens/HomePage.dart';
 import 'package:ether_wallet_flutter_app/controllers/localAuthenticationController.dart';
 import 'package:ether_wallet_flutter_app/controllers/loginController.dart';
-import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
-import 'package:ether_wallet_flutter_app/functions/getAllWebhooks.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class AuthenticationPage extends StatelessWidget {
 
@@ -17,9 +17,14 @@ class AuthenticationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    OneSignal.shared.setNotificationWillShowInForegroundHandler((OSNotificationReceivedEvent event){
+      event.complete(event.notification);
+      ///TODO: Show notification dialogue
+    });
+
     final authController = Get.put(LocalAuthController());
     final loginController = Get.put(LoginController());
-    final walletController = Get.put(WalletController());
+
 
     return GetBuilder<LocalAuthController>(
       builder: (lac){
@@ -55,18 +60,10 @@ class AuthenticationPage extends StatelessWidget {
                 loginController.logOut();
               }, child: Text("Log out")),
             ],
-          ) : Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            color: Colors.green,
-            child: Center(
-              child: TextButton(onPressed: () async{
-                walletController.createAEthAccount();
-              }, child: Text("check Api"))
-            ),
-          ),
+          ) : HomeScreen(),
         );
       },
     );
   }
 }
+

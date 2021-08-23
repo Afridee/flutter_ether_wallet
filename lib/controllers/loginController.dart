@@ -70,8 +70,8 @@ class LoginController extends GetxController{
               adressList.add(model.address);
             }
 
-            var response = createWebhookAPI(appId: dotenv.env['ALCHEMY_MAINNET_APP_ID'].toString(), playerId: osUserID.toString(), ethAddresses: adressList);
-            var response2 = createWebhookAPI(appId: dotenv.env['ALCHEMY_RINKEBY_APP_ID'].toString(), playerId: osUserID.toString(), ethAddresses: adressList);
+            var response = await createWebhookForAddressActivity(appId: dotenv.env['ALCHEMY_MAINNET_APP_ID'].toString(), playerId: osUserID.toString(), ethAddresses: adressList);
+            var response2 = await createWebhookForAddressActivity(appId: dotenv.env['ALCHEMY_RINKEBY_APP_ID'].toString(), playerId: osUserID.toString(), ethAddresses: adressList);
           }
         }
       });
