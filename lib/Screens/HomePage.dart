@@ -1,5 +1,7 @@
 import 'package:ether_wallet_flutter_app/functions/getETHBalanceAPI.dart';
 import 'package:ether_wallet_flutter_app/functions/getTokenBalanceAPI.dart';
+import 'package:ether_wallet_flutter_app/functions/getTokentxList.dart';
+import 'package:ether_wallet_flutter_app/functions/gettxList.dart';
 
 import '../custom_widgets.dart/custom_appbar.dart';
 import '../utils/constants.dart';
@@ -87,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             IconButton(
                               onPressed: () async{
-                                Map<String, dynamic>  g = await getTokenBalanceAPI(network: "rinkeby", tokenAddress: "0x01BE23585060835E02B77ef475b0Cc51aA1e0709", walletAddress: "0x1cf56Fd8e1567f8d663e54050d7e44643aF970Ce");
+                                Map<String, dynamic>  g = await getTokenTransactions(network: "-rinkeby", address: "0x303605ddAAF2690b989c2c734eA1B03F7Cc6637a");
                                 print(g);
                               },
                               icon: Icon(CupertinoIcons.arrow_swap, size: 30),
