@@ -1,7 +1,11 @@
 import 'package:ether_wallet_flutter_app/functions/getETHBalanceAPI.dart';
+import 'package:ether_wallet_flutter_app/functions/getNFTtxList.dart';
 import 'package:ether_wallet_flutter_app/functions/getTokenBalanceAPI.dart';
 import 'package:ether_wallet_flutter_app/functions/getTokentxList.dart';
+import 'package:ether_wallet_flutter_app/functions/getTransactionDetailsAPI.dart';
 import 'package:ether_wallet_flutter_app/functions/gettxList.dart';
+import 'package:ether_wallet_flutter_app/functions/sendEthAPI.dart';
+import 'package:ether_wallet_flutter_app/models/TransactionDetailsModel.dart';
 
 import '../custom_widgets.dart/custom_appbar.dart';
 import '../utils/constants.dart';
@@ -89,8 +93,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             IconButton(
                               onPressed: () async{
-                                Map<String, dynamic>  g = await getTokenTransactions(network: "-rinkeby", address: "0x303605ddAAF2690b989c2c734eA1B03F7Cc6637a");
-                                print(g);
+                                Map<String, dynamic>  g = await getTransactionDetailsAPI(network: "rinkeby", trasactionHash: "0x5384a9a0319b15be51ca601129ae58871b81bc3bc4f4167aa9713c7d1c2e3ffb");
+                                TransactionDetailsModel model = TransactionDetailsModel.fromJson(g);
+                                print(model.transactionDetails.value);
                               },
                               icon: Icon(CupertinoIcons.arrow_swap, size: 30),
                               color: Colors.white,

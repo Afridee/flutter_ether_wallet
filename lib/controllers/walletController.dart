@@ -10,9 +10,9 @@ import 'package:get/get.dart';
 import '../functions/createEthAccountAPI.dart';
 
 class WalletController extends GetxController {
-  createAEthAccount() async {
-    ///TODO: It should ask for a password
-    Map<String, dynamic> account = await createEthAccountAPI();
+  createAEthAccount({required String password}) async {
+
+    Map<String, dynamic> account = await createEthAccountAPI(password: password);
 
     if (account['error'] == null) {
       final currentUser = fba.FirebaseAuth.instance.currentUser;
