@@ -20,10 +20,10 @@ Future<Map<String, dynamic>> sendEthAPI(
       "network": network,
       "fromAddress": fromAddress,
       "toAddress": toAddress,
-      "value": value, //in wei
+      "value": value, //in ether
       "gas": gas,
       "fromAddressPrivateKey": fromAddressPrivateKey,
-      "gasPrice": gasPrice //in wei
+      "gasPrice": gasPrice //in gwei
     }),
   );
 

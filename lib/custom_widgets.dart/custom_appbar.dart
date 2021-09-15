@@ -15,7 +15,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(
-        'itmar.argent.xyz',
+        title,
         style: textTheme.headline6!.copyWith(color: Colors.white),
       ),
       elevation: 0.0,

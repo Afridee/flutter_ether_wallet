@@ -1,26 +1,42 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
-class CustomShapeClipper extends CustomClipper<Path> {
+import 'constants.dart';
+
+class RPSCustomPainter extends CustomPainter{
+
   @override
-  Path getClip(Size size) {
-    final Path path = Path();
-    path.lineTo(0.0, size.height);
+  void paint(Canvas canvas, Size size) {
 
-    var firstEndPoint = Offset(size.width * .5, size.height - 30.0);
-    var firstControlpoint = Offset(size.width * 0.25, size.height - 50.0);
-    path.quadraticBezierTo(firstControlpoint.dx, firstControlpoint.dy,
-        firstEndPoint.dx, firstEndPoint.dy);
 
-    var secondEndPoint = Offset(size.width, size.height - 80.0);
-    var secondControlPoint = Offset(size.width * .75, size.height - 10);
-    path.quadraticBezierTo(secondControlPoint.dx, secondControlPoint.dy,
-        secondEndPoint.dx, secondEndPoint.dy);
 
-    path.lineTo(size.width, 0.0);
-    path.close();
-    return path;
+    Paint paint_0 = new Paint()
+      ..color = kPrimaryColor
+      ..style = PaintingStyle.fill
+      ..strokeWidth = 1;
+
+
+    Path path_0 = Path();
+    path_0.moveTo(0,0);
+    path_0.lineTo(0,size.height*0.8250000);
+    path_0.quadraticBezierTo(size.width*0.0610200,size.height*0.8251500,size.width*0.1420000,size.height*0.8250000);
+    path_0.cubicTo(size.width*0.3789200,size.height*0.8242000,size.width*0.2986200,size.height*0.9408250,size.width*0.4000000,size.height*0.9950000);
+    path_0.cubicTo(size.width*0.4047800,size.height*0.9983250,size.width*0.6000000,size.height,size.width*0.6000000,size.height*0.9950000);
+    path_0.cubicTo(size.width*0.7000000,size.height*0.9375000,size.width*0.6206200,size.height*0.8258250,size.width*0.8560000,size.height*0.8250000);
+    path_0.quadraticBezierTo(size.width*0.9643800,size.height*0.8234000,size.width,size.height*0.8250000);
+    path_0.lineTo(size.width,0);
+    path_0.lineTo(0,0);
+
+    canvas.drawPath(path_0, paint_0);
+
+
   }
 
   @override
-  bool shouldReclip(CustomClipper oldClipper) => true;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
+  }
+
 }
+
+
+

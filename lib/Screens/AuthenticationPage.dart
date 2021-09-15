@@ -1,4 +1,4 @@
-import 'package:ether_wallet_flutter_app/Screens/HomePage.dart';
+import 'Home/HomePage.dart';
 import 'package:ether_wallet_flutter_app/controllers/localAuthenticationController.dart';
 import 'package:ether_wallet_flutter_app/controllers/loginController.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,8 @@ class AuthenticationPage extends StatelessWidget {
 
     OneSignal.shared.setNotificationWillShowInForegroundHandler((OSNotificationReceivedEvent event){
       event.complete(event.notification);
-      ///TODO: Show notification dialogue
+      print("Here: ");
+      print(event.notification.body);
     });
 
     final authController = Get.put(LocalAuthController());

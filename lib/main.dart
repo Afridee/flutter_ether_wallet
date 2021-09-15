@@ -14,6 +14,7 @@ void main() async{
   Directory Document = await getApplicationDocumentsDirectory();
   Hive.init(Document.path);
   await Hive.openBox<Map>('userObj');
+  await Hive.openBox<String>('ERC20Tokens');
   await Firebase.initializeApp();
 
   OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
