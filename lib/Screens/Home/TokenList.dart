@@ -38,7 +38,7 @@ class TokenList extends StatelessWidget {
             trailing: Column(
               children: [
                 Text(
-                  wC.tokenList[index].balance, // set the price
+                  double.parse(wC.tokenList[index].balance).toStringAsFixed(3), // set the price
                   style: _textTheme.bodyText1!.copyWith(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,

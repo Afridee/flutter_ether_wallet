@@ -1,4 +1,5 @@
 import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
+import 'package:ether_wallet_flutter_app/functions/importAccount.dart';
 import '../../widgets/EthAccountBottomSheet.dart';
 import 'package:ether_wallet_flutter_app/utils/custom_shape_clipper.dart';
 import 'package:get/get.dart';
@@ -6,12 +7,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class hmPageTopPart extends StatelessWidget {
-  const hmPageTopPart({
+  hmPageTopPart({
     Key? key,
     required TextTheme textTheme,
   }) : _textTheme = textTheme, super(key: key);
 
   final TextTheme _textTheme;
+  final WalletController walletController = Get.put(WalletController());
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +106,8 @@ class hmPageTopPart extends StatelessWidget {
                       children: [
                         IconButton(
                           onPressed: () async {
+
+
                           },
                           icon: Icon(CupertinoIcons.arrow_swap, size: 30),
                           color: Colors.white,

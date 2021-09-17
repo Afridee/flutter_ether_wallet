@@ -6,6 +6,7 @@ import '../../custom_widgets.dart/custom_appbar.dart';
 import '../../utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 import 'homePageTopPart.dart';
 
@@ -35,31 +36,42 @@ class _HomeScreenState extends State<HomeScreen> {
         title: '',
       ),
       drawer: Drawer(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            hmPageTopPart(textTheme: _textTheme),
-            Container(
-              height: 260,
-              child: TokenList(textTheme: _textTheme),
+      body: GetBuilder<WalletController>(
+        builder: (wC){
+          return ModalProgressHUD(
+            color: Colors.white,
+            progressIndicator: CircularProgressIndicator(
+              color: kPrimaryColor,
             ),
-            Container(
-              child: Center(
-                child: IconButton(
-                  icon: Icon(
-                    Icons.add_circle,
-                    color: kPrimaryColor,
+            inAsyncCall: wC.loading,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  hmPageTopPart(textTheme: _textTheme),
+                  Container(
+                    height: 260,
+                    child: TokenList(textTheme: _textTheme),
                   ),
-                  iconSize: 70,
-                  color: Colors.white,
-                  onPressed: () {
-                    addTokenDialog(context: context, title: "Enter ERC20 token address", color: kPrimaryColor);
-                  },
-                ),
+                  Container(
+                    child: Center(
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.add_circle,
+                          color: kPrimaryColor,
+                        ),
+                        iconSize: 70,
+                        color: Colors.white,
+                        onPressed: () {
+                          addTokenDialog(context: context, title: "Enter ERC20 token address", color: kPrimaryColor);
+                        },
+                      ),
+                    ),
+                  )
+                ],
               ),
-            )
-          ],
-        ),
+            ),
+          );
+        },
       ),
     );
   }
