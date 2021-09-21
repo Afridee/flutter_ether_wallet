@@ -1,11 +1,13 @@
 import 'dart:math';
 import 'package:ether_wallet_flutter_app/functions/createWebhookForAddressActivity.dart';
 import 'package:ether_wallet_flutter_app/functions/getAllWebhooks.dart';
+import 'package:ether_wallet_flutter_app/functions/getERC20txList.dart';
 import 'package:ether_wallet_flutter_app/functions/getETHBalanceAPI.dart';
 import 'package:ether_wallet_flutter_app/functions/getEthPrice.dart';
 import 'package:ether_wallet_flutter_app/functions/getTokenBalanceAPI.dart';
 import 'package:ether_wallet_flutter_app/functions/importAccount.dart';
 import 'package:ether_wallet_flutter_app/functions/updateWebhookAddresses.dart';
+import 'package:ether_wallet_flutter_app/models/ERC20tokenTransferModel.dart';
 import 'package:ether_wallet_flutter_app/models/EncryptedEthAccountModel.dart';
 import 'package:ether_wallet_flutter_app/models/WebhooksModel.dart';
 import 'package:ether_wallet_flutter_app/models/getTokenBalanceModel.dart';
@@ -33,6 +35,28 @@ class WalletController extends GetxController {
   String activeAccountUSDBalance = '0';
 
   List<GetTokenBalanceModel> tokenList = [];
+
+  List<Erc20TokenTransferModel> erc20transfers = [];
+
+  getTokenTransactions(int contractIndex) async{
+
+    erc20transfers = [];
+    update();
+
+    if(contractIndex>=0){
+      var response = await getERC20transactions(network: "-$network", address: "0x" + activeAccount, contractaddress: eRC20TokenBox.getAt(contractIndex).toString(), page: 1, offset: 100);
+
+      if(response['error'] == null){
+        List transactions = response['result'];
+        transactions.forEach((element) {
+          Erc20TokenTransferModel transferDetails = Erc20TokenTransferModel.fromJson(element);
+          erc20transfers.add(transferDetails);
+        });
+      }
+      update();
+    }
+
+  }
 
   getTokens() async{
 
@@ -63,6 +87,9 @@ class WalletController extends GetxController {
     if(response["error"]==null){
       GetTokenBalanceModel token = GetTokenBalanceModel.fromJson(response);
       eRC20TokenBox.put(token.tokenSymbol, tknAddress);
+    }else{
+      print("Error while adding token: ");
+      print(response["error"]);
     }
 
     getTokens();

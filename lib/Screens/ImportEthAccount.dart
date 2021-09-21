@@ -17,7 +17,7 @@ class _ImportEthAccountScreenState extends State<ImportEthAccountScreen> {
   final WalletController walletController = Get.put(WalletController());
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return GetBuilder<WalletController>(builder: (wC){
       return ModalProgressHUD(
         inAsyncCall: wC.loading,

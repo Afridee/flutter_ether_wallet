@@ -6,13 +6,14 @@ class LocalAuthController extends GetxController{
   bool didAuthenticate = false;
 
   authenticate() async{
-    var localAuth = LocalAuthentication();
-
-    bool canCheckBiometrics  = await localAuth.canCheckBiometrics;
-
-    didAuthenticate = await localAuth.authenticate(
-        localizedReason: 'Please authenticate to get inside your wallet',
-        biometricOnly: canCheckBiometrics);
+    didAuthenticate = true;
+    // var localAuth = LocalAuthentication();
+    //
+    // bool canCheckBiometrics  = await localAuth.canCheckBiometrics;
+    //
+    // didAuthenticate = await localAuth.authenticate(
+    //     localizedReason: 'Please authenticate to get inside your wallet',
+    //     biometricOnly: canCheckBiometrics);
     update();
   }
 }

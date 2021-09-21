@@ -1,10 +1,15 @@
 import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
 import 'package:ether_wallet_flutter_app/functions/importAccount.dart';
+import 'package:ether_wallet_flutter_app/utils/constants.dart';
+import 'package:ether_wallet_flutter_app/widgets/EthAddressQRCode.dart';
+import 'package:ether_wallet_flutter_app/widgets/snackbar.dart';
+import 'package:ionicons/ionicons.dart';
 import '../../widgets/EthAccountBottomSheet.dart';
 import 'package:ether_wallet_flutter_app/utils/custom_shape_clipper.dart';
 import 'package:get/get.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:clipboard/clipboard.dart';
 
 class hmPageTopPart extends StatelessWidget {
   hmPageTopPart({
@@ -33,43 +38,50 @@ class hmPageTopPart extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 24.0, vertical: 8),
+                padding: const EdgeInsets.only(left: 15.0),
                 child: GetBuilder<WalletController>(
                   builder: (wC) {
-                    return Text(
-                      "0x" +
-                          wC.activeAccount.substring(0, 4) +
-                          "...." +
-                          wC.activeAccount.substring(
-                              wC.activeAccount.length - 5,
-                              wC.activeAccount.length),
-                      style: _textTheme.headline5!.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
+                    return Row(
+                      children: [
+                        Text(
+                          "0x" +
+                              wC.activeAccount.substring(0, 5) +
+                              "...." +
+                              wC.activeAccount.substring(
+                                  wC.activeAccount.length - 5,
+                                  wC.activeAccount.length),
+                          style: _textTheme.headline5!.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(onPressed: (){
+                          FlutterClipboard.copy("0x" + wC.activeAccount).then((value) => {
+                            snackBar(context: context, text: "Eth address copied", trailingIcon: Icon(Icons.copy,color: Colors.white), bgColor: kPrimaryColor, textColor: Colors.white, duration: 2)
+                          });
+                        }, icon: Icon(Icons.copy), color: Colors.white,),
+                        IconButton(onPressed: (){
+                          EthAddressQRCode(context, wC.activeAccount);
+                        }, icon: Icon(Icons.share), color: Colors.white,)
+                      ],
                     );
                   },
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24.0, vertical: 8),
-                    child: GetBuilder<WalletController>(builder: (wC) {
+              Padding(
+                padding: const EdgeInsets.only(left: 15.0, right: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GetBuilder<WalletController>(builder: (wC) {
                       return Text(
                         wC.activeAccountEthBalance + ' ETH',
-                        style: _textTheme.headline3!.copyWith(
+                        style: _textTheme.headline5!.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.bold),
                       );
                     }),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 24.0),
-                    child: IconButton(
-                      iconSize: 50,
+                    IconButton(
+                      iconSize: 80,
                       icon: Icon(
                         CupertinoIcons.profile_circled,
                         color: Colors.white,
@@ -77,18 +89,17 @@ class hmPageTopPart extends StatelessWidget {
                       onPressed: (){
                         bottomSheetOfEthAccounts(context);
                       },
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 24.0, vertical: 8),
+                padding: const EdgeInsets.only(left: 15.0),
                 child: GetBuilder<WalletController>(
                   builder: (wC) {
                     return Text(
                       '\$ ' + wC.activeAccountUSDBalance.toString(),
-                      style: _textTheme.headline5!.copyWith(
+                      style: _textTheme.headline6!.copyWith(
                         color: Colors.white70,
                         fontWeight: FontWeight.bold,
                       ),
@@ -96,8 +107,15 @@ class hmPageTopPart extends StatelessWidget {
                   },
                 ),
               ),
+              // Row(
+              //   children: [
+              //     IconButton(onPressed: (){}, icon: Icon(Ionicons.arrow_down)),
+              //     IconButton(onPressed: (){}, icon: Icon(Ionicons.arrow_forward)),
+              //     IconButton(onPressed: (){}, icon: Icon(Ionicons.swap_vertical))
+              //   ],
+              // ),
               SizedBox(
-                height: 50,
+                height: 40,
               ),
               Align(
                 child: Center(

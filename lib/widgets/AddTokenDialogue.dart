@@ -31,7 +31,7 @@ color}) {
           // usually buttons at the bottom of the dialog
           new FlatButton(
             child: new Text(
-              "Create New",
+              "Add",
               style: TextStyle(
                   fontSize: 17,
                   color: Colors.white,
