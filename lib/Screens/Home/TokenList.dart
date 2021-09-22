@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 
-import '../TransactionsScreen.dart';
+import '../TokenTransactions/TransactionsScreen.dart';
 
 class TokenList extends StatelessWidget {
   const TokenList({

@@ -1,6 +1,10 @@
+import 'dart:convert';
 import 'dart:math';
+import 'package:ether_wallet_flutter_app/Screens/TokenTransactions/ethTransactionList.dart';
 import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
+import 'package:ether_wallet_flutter_app/functions/DecodeInputDataAPI.dart';
 import 'package:ether_wallet_flutter_app/functions/TimestampToDateTime.dart';
+import 'package:ether_wallet_flutter_app/functions/getABI.dart';
 import 'package:ether_wallet_flutter_app/models/ERC20tokenTransferModel.dart';
 import 'package:ether_wallet_flutter_app/models/getTokenBalanceModel.dart';
 import 'package:ether_wallet_flutter_app/utils/constants.dart';
@@ -8,6 +12,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
+
+import 'erc20TransactionList.dart';
 
 class TransactionScreen extends StatefulWidget {
   final int tokenIndex;
@@ -132,72 +138,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
             ),
             Expanded(
               child: Container(
-                child: GetBuilder<WalletController>(
-                  builder: (wC){
-                    return ListView.separated(
-                      separatorBuilder: (context, index) {
-                        return Divider();
-                      },
-                      itemCount: wC.erc20transfers.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ListTile(
-                            onTap: () async {},
-                            trailing: Icon(
-                              Ionicons.arrow_forward,
-                              color:
-                              wC.erc20transfers[index].from == "0x" + wC.activeAccount ? Colors.redAccent : Color(0xff3cad89),
-                            ),
-                            title: Text(
-                              (double.parse(wC.erc20transfers[index].value) /
-                                  double.parse((pow(
-                                      10,
-                                      int.parse(wC.erc20transfers[index]
-                                          .tokenDecimal)))
-                                      .toString()))
-                                  .toStringAsFixed(3) +" "+wC.erc20transfers[index].tokenSymbol,
-                              style: TextStyle(
-                                  color: wC.erc20transfers[index].from == "0x" + wC.activeAccount
-                                      ? Colors.redAccent
-                                      : Color(0xff3cad89),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20),
-                            ),
-                            subtitle: Text(TimeStampToDate(int.parse(wC.erc20transfers[index].timeStamp)*1000)),
-                            leading: CircleAvatar(
-                              backgroundColor: wC.erc20transfers[index].from == "0x" + wC.activeAccount
-                                  ? Color(0xffffeaef)
-                                  : Color(0xffc6fae0),
-                              radius: 30,
-                              child: Column(
-                                children: [
-                                  Spacer(),
-                                  Icon(
-                                    wC.erc20transfers[index].from == "0x" + wC.activeAccount
-                                        ? Ionicons.arrow_up
-                                        : Ionicons.arrow_down,
-                                    color: wC.erc20transfers[index].from == "0x" + wC.activeAccount
-                                        ? Colors.redAccent
-                                        : Color(0xff3cad89),
-                                    size: 10,
-                                  ),
-                                  Icon(
-                                    Ionicons.wallet,
-                                    color: wC.erc20transfers[index].from == "0x" + wC.activeAccount
-                                        ? Colors.redAccent
-                                        : Color(0xff3cad89),
-                                  ),
-                                  Spacer(),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
+                child: widget.tokenIndex==0? EthTransactionlist() : Erc20Transactionlist(),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -213,3 +154,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
     );
   }
 }
+
+
+
+

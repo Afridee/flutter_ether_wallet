@@ -5,10 +5,10 @@ import 'dart:convert';
 //network value is "-rinkeby" if transactions are in rinkeby network
 //otherwise leave it ""...
 
-Future<Map<String, dynamic>> getTransactions(
-    {required String network, required String address, required int page, required int offset}) async{
+Future<Map<String, dynamic>> getABI(
+    {required String network, required String address}) async{
   final String apiKey = dotenv.env['ETHERSCAN_API_KEY'].toString();
-  String link = "https://api$network.etherscan.io/api?module=account&action=txlist&address=$address&startblock=0&endblock=latest&sort=desc&apikey=$apiKey&page=$page&offset=$offset";
+  String link = "https://api$network.etherscan.io/api?module=contract&action=getabi&address=$address&apikey=$apiKey";
   var url = Uri.parse(link);
 
   var response = await http.get(url);
@@ -21,3 +21,4 @@ Future<Map<String, dynamic>> getTransactions(
     };
   }
 }
+

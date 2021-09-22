@@ -1,16 +1,21 @@
+import 'dart:convert';
 import 'dart:math';
+import 'package:ether_wallet_flutter_app/functions/DecodeInputDataAPI.dart';
 import 'package:ether_wallet_flutter_app/functions/createWebhookForAddressActivity.dart';
+import 'package:ether_wallet_flutter_app/functions/getABI.dart';
 import 'package:ether_wallet_flutter_app/functions/getAllWebhooks.dart';
 import 'package:ether_wallet_flutter_app/functions/getERC20txList.dart';
 import 'package:ether_wallet_flutter_app/functions/getETHBalanceAPI.dart';
 import 'package:ether_wallet_flutter_app/functions/getEthPrice.dart';
 import 'package:ether_wallet_flutter_app/functions/getTokenBalanceAPI.dart';
+import 'package:ether_wallet_flutter_app/functions/gettxList.dart';
 import 'package:ether_wallet_flutter_app/functions/importAccount.dart';
 import 'package:ether_wallet_flutter_app/functions/updateWebhookAddresses.dart';
 import 'package:ether_wallet_flutter_app/models/ERC20tokenTransferModel.dart';
 import 'package:ether_wallet_flutter_app/models/EncryptedEthAccountModel.dart';
 import 'package:ether_wallet_flutter_app/models/WebhooksModel.dart';
 import 'package:ether_wallet_flutter_app/models/getTokenBalanceModel.dart';
+import 'package:ether_wallet_flutter_app/models/transactionListtransactionmodel.dart';
 import 'package:ether_wallet_flutter_app/utils/constants.dart';
 import 'package:ether_wallet_flutter_app/widgets/ethAccountCreatedDialogue.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
@@ -38,6 +43,23 @@ class WalletController extends GetxController {
 
   List<Erc20TokenTransferModel> erc20transfers = [];
 
+  List<TransactionListtransactionmodel> ethTransfers = [];
+
+  Future<String> decodeInputData({required String address, required String input}) async{
+    try {
+      var response = await getABI(
+              network: "-$network",
+              address: address);
+      var decoded = await decodeInputDataAPI(
+              inputdata: input,
+              abi: jsonDecode(response['result']));
+
+      return decoded['name'];
+    } catch (e) {
+      return "Smart Contract interaction";
+    }
+  }
+
   getTokenTransactions(int contractIndex) async{
 
     erc20transfers = [];
@@ -54,6 +76,18 @@ class WalletController extends GetxController {
         });
       }
       update();
+    }else{
+        var response = await getTransactions(network: "-$network", address: "0x" + activeAccount, page: 1, offset: 100);
+
+        if(response['error'] == null){
+          List transactions = response['result'];
+          transactions.forEach((element) {
+            TransactionListtransactionmodel transferDetails = TransactionListtransactionmodel.fromJson(element);
+            ethTransfers.add(transferDetails);
+          });
+        }
+
+        update();
     }
 
   }

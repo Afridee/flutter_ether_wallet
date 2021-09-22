@@ -1,15 +1,15 @@
 // To parse this JSON data, do
 //
-//     final transaclitionListModel = transaclitionListModelFromJson(jsonString);
+//     final transactionListtransactionmodel = transactionListtransactionmodelFromJson(jsonString);
 
 import 'dart:convert';
 
-TransaclitionListModel transaclitionListModelFromJson(String str) => TransaclitionListModel.fromJson(json.decode(str));
+TransactionListtransactionmodel transactionListtransactionmodelFromJson(String str) => TransactionListtransactionmodel.fromJson(json.decode(str));
 
-String transaclitionListModelToJson(TransaclitionListModel data) => json.encode(data.toJson());
+String transactionListtransactionmodelToJson(TransactionListtransactionmodel data) => json.encode(data.toJson());
 
-class TransaclitionListModel {
-  TransaclitionListModel({
+class TransactionListtransactionmodel {
+  TransactionListtransactionmodel({
     required this.blockNumber,
     required this.timeStamp,
     required this.hash,
@@ -49,7 +49,7 @@ class TransaclitionListModel {
   String gasUsed;
   String confirmations;
 
-  factory TransaclitionListModel.fromJson(Map<String, dynamic> json) => TransaclitionListModel(
+  factory TransactionListtransactionmodel.fromJson(Map<String, dynamic> json) => TransactionListtransactionmodel(
     blockNumber: json["blockNumber"],
     timeStamp: json["timeStamp"],
     hash: json["hash"],
@@ -91,3 +91,4 @@ class TransaclitionListModel {
     "confirmations": confirmations,
   };
 }
+
