@@ -219,6 +219,7 @@ class _SwapTokenForTokenState extends State<SwapTokenForToken> {
                           color: Colors.black54,
                           fontWeight: FontWeight.bold),
                     ),
+
                     Container(
                       width: 160,
                       child: Text(
