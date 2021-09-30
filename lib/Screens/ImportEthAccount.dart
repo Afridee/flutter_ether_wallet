@@ -17,6 +17,15 @@ class _ImportEthAccountScreenState extends State<ImportEthAccountScreen> {
   final WalletController walletController = Get.put(WalletController());
 
   @override
+  void dispose() {
+    privateKey.dispose();
+    password.dispose();
+    reEnteredpassword.dispose();
+    walletController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context){
     return GetBuilder<WalletController>(builder: (wC){
       return ModalProgressHUD(

@@ -22,10 +22,11 @@ EthAddressQRCode(BuildContext context, String ethAddress){
             children: [
                 Spacer(),
                 Text(
-                  "Scan this QR code to share your eth address.", style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 20
-                ), textAlign: TextAlign.center),
+                  "Scan this QR code to share your eth address.",
+                    style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 20
+                    ), textAlign: TextAlign.center),
                 Spacer(),
                 QrImage(
                   data: "0x" + ethAddress,

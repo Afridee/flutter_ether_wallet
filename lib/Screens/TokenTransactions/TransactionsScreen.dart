@@ -1,18 +1,16 @@
-import 'dart:convert';
-import 'dart:math';
 import 'package:ether_wallet_flutter_app/Screens/TokenTransactions/ethTransactionList.dart';
+import 'package:ether_wallet_flutter_app/Screens/sendEthers/sendEthers.dart';
+import 'package:ether_wallet_flutter_app/Screens/sendTokens/sendTokens.dart';
+import 'package:ether_wallet_flutter_app/Screens/swapetherwithtokens/swapetherwithtokes.dart';
+import 'package:ether_wallet_flutter_app/Screens/swaptokenfortoken/SwapTokenForTokenPage.dart';
 import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
-import 'package:ether_wallet_flutter_app/functions/DecodeInputDataAPI.dart';
-import 'package:ether_wallet_flutter_app/functions/TimestampToDateTime.dart';
-import 'package:ether_wallet_flutter_app/functions/getABI.dart';
-import 'package:ether_wallet_flutter_app/models/ERC20tokenTransferModel.dart';
 import 'package:ether_wallet_flutter_app/models/getTokenBalanceModel.dart';
 import 'package:ether_wallet_flutter_app/utils/constants.dart';
+import 'package:ether_wallet_flutter_app/widgets/EthAddressQRCode.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
-
 import 'erc20TransactionList.dart';
 
 class TransactionScreen extends StatefulWidget {
@@ -71,7 +69,21 @@ class _TransactionScreenState extends State<TransactionScreen> {
                               backgroundColor: Colors.white,
                               child: IconButton(
                                 onPressed: () {
-
+                                  if(widget.tokenIndex>0){
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => new SendTokens(),
+                                      ),
+                                    );
+                                  }else{//token is ether then...
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => new SendEthers(),
+                                      ),
+                                    );
+                                  }
                                 },
                                 icon: Icon(Ionicons.send, color: kPrimaryColor),
                               ),
@@ -92,10 +104,16 @@ class _TransactionScreenState extends State<TransactionScreen> {
                               CircleAvatar(
                                 radius: 30.0,
                                 backgroundColor: Colors.white,
-                                child: IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Ionicons.download,
-                                      color: kPrimaryColor),
+                                child: GetBuilder<WalletController>(
+                                  builder: (wC){
+                                    return IconButton(
+                                      onPressed: () {
+                                        EthAddressQRCode(context, wC.activeAccount);
+                                      },
+                                      icon: Icon(Ionicons.download,
+                                          color: kPrimaryColor),
+                                    );
+                                  },
                                 ),
                               ),
                               Padding(
@@ -114,7 +132,23 @@ class _TransactionScreenState extends State<TransactionScreen> {
                               radius: 30.0,
                               backgroundColor: Colors.white,
                               child: IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                   if(widget.tokenIndex>0){
+                                     Navigator.push(
+                                       context,
+                                       MaterialPageRoute(
+                                         builder: (context) => new SwapTokenForToken(),
+                                       ),
+                                     );
+                                   }else{//token is ether then...
+                                     Navigator.push(
+                                       context,
+                                       MaterialPageRoute(
+                                         builder: (context) => new SwapEthersWithTokens(),
+                                       ),
+                                     );
+                                   }
+                                },
                                 icon: Icon(Ionicons.swap_vertical,
                                     color: kPrimaryColor),
                               ),

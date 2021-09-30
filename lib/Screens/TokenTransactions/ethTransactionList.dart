@@ -123,6 +123,7 @@ class EthTransactionlist extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 FutureBuilder<String>(
+                                  initialData: "...",
                                   future: wC.decodeInputData(address: wC.ethTransfers[index].to, input: wC.ethTransfers[index].input),
                                   builder: (BuildContext context, AsyncSnapshot<String> snapshot){
                                       if(snapshot.connectionState==ConnectionState.done){

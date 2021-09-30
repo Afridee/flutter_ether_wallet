@@ -16,6 +16,12 @@ class _CreateEthAccountScreenState extends State<CreateEthAccountScreen> {
   TextEditingController reEnteredpassword = new TextEditingController();
   final WalletController walletController = Get.put(WalletController());
 
+  @override
+  void dispose() {
+    password.dispose();
+    reEnteredpassword.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
