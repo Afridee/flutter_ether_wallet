@@ -2,17 +2,15 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
-Future<Map<String, dynamic>> swapTokensAPI(
+Future<Map<String, dynamic>> estimateGasForSwappingTokenAPI(
     {required String network,
       required String fromContractAddress,
       required String toContractAddress,
-      required int amountIn,
-      required int gas,
-      required String privateKey,
-      required double gasPrice,
-      required int minOutPercentage}) async {
+      required String from,
+      required String amountIn,
+    }) async {
   final String baseUrl = dotenv.env['BASE_URL'].toString();
-  var url = Uri.parse(baseUrl + '/transactions/swapTokens');
+  var url = Uri.parse(baseUrl + '/estimations/estimateGasForSwappingToken');
 
   var response = await http.post(
     url,
@@ -21,19 +19,15 @@ Future<Map<String, dynamic>> swapTokensAPI(
       "network" : network,
       "fromContractAddress" : fromContractAddress,
       "toContractAddress" : toContractAddress,
-      "privateKey" : privateKey,
+      "from" : from,
       "amountIn" : amountIn,
-      "gas" : gas,
-      "gasPrice" : gasPrice,
-      "minOutPercentage" : minOutPercentage
+      "minOutPercentage" : 100
     }),
   );
 
   if(response.statusCode==200){
     return jsonDecode(response.body);
   }else{
-    return {
-      "error" : response.body
-    };
+    return jsonDecode(response.body);
   }
 }

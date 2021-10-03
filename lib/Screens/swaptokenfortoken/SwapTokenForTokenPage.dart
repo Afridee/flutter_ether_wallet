@@ -1,19 +1,67 @@
 import 'package:ether_wallet_flutter_app/controllers/SwapTokenForTokenController.dart';
+import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
+import 'package:ether_wallet_flutter_app/functions/estimateGasPriceAPI.dart';
+import 'package:ether_wallet_flutter_app/functions/getAmountsOutForTokenSwapAPI.dart';
 import 'package:ether_wallet_flutter_app/utils/constants.dart';
 import 'package:ether_wallet_flutter_app/widgets/TextField1.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 class SwapTokenForToken extends StatefulWidget {
+  final int tokenIndex;
+
+  const SwapTokenForToken({Key? key, required this.tokenIndex})
+      : super(key: key);
+
   @override
   _SwapTokenForTokenState createState() => _SwapTokenForTokenState();
 }
 
 class _SwapTokenForTokenState extends State<SwapTokenForToken> {
+  final WalletController walletController = Get.put(WalletController());
   final SwapTokenForTokenController swapTokenForTokenController =
       Get.put(SwapTokenForTokenController());
+  Box<String> eRC20TokenBox = Hive.box<String>('ERC20Tokens');
   TextEditingController toContractAddress = new TextEditingController();
+  TextEditingController amountIn = new TextEditingController();
+  TextEditingController gas = new TextEditingController();
+  TextEditingController privateKey = new TextEditingController();
+  TextEditingController gasPrice = new TextEditingController();
+
+  @override
+  void initState() {
+    toContractAddress.addListener(() {
+      swapTokenForTokenController.estimateAmountsOut(
+        network: walletController.network,
+        amountIn: amountIn.text,
+        fromContractAddress:
+            walletController.eRC20TokenBox.getAt(widget.tokenIndex - 1) ?? '',
+        toContractAddress: toContractAddress.text,
+      );
+    });
+    amountIn.addListener(() {
+      swapTokenForTokenController.estimateAmountsOut(
+        network: walletController.network,
+        amountIn: amountIn.text,
+        fromContractAddress:
+            walletController.eRC20TokenBox.getAt(widget.tokenIndex - 1) ?? '',
+        toContractAddress: toContractAddress.text,
+      );
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    toContractAddress.dispose();
+    amountIn.dispose();
+    gas.dispose();
+    privateKey.dispose();
+    gasPrice.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,13 +109,11 @@ class _SwapTokenForTokenState extends State<SwapTokenForToken> {
                 ],
               ),
             ),
-            SizedBox(
-              height: 30,
-            ),
+
             Container(
-              padding: EdgeInsets.all(15),
+              padding: EdgeInsets.only(top: 10, left: 10, right: 10),
               width: MediaQuery.of(context).size.width,
-              height: 70,
+              height: 60,
               child: Center(
                 child: Center(
                   child: Text(
@@ -79,19 +125,22 @@ class _SwapTokenForTokenState extends State<SwapTokenForToken> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(15),
+              padding: EdgeInsets.all(10),
               width: MediaQuery.of(context).size.width,
               child: TextField1(
                 hint: "E.g. 0xc7..Ab",
                 label: "",
                 controller: toContractAddress,
                 inputType: TextInputType.text,
+                validator: toContractAddress.text.length == 42,
+                errorText: "Contract Address should be 42 characters long",
               ),
             ),
+            Divider(),
             Container(
-              padding: EdgeInsets.all(15),
+              padding: EdgeInsets.only(top: 10, left: 10, right: 10),
               width: MediaQuery.of(context).size.width,
-              height: 70,
+              height: 30,
               child: Center(
                 child: Text(
                   "Private key of active account: ",
@@ -100,19 +149,22 @@ class _SwapTokenForTokenState extends State<SwapTokenForToken> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(15),
+              padding: EdgeInsets.all(10),
               width: MediaQuery.of(context).size.width,
               child: TextField1(
                 hint: "E.g. c7..Ab",
                 label: "",
-                controller: toContractAddress,
+                controller: privateKey,
                 inputType: TextInputType.text,
+                validator: privateKey.text.length == 64,
+                errorText: "private key length should be 64 characters",
               ),
             ),
+            Divider(),
             Container(
-              padding: EdgeInsets.all(15),
+              padding: EdgeInsets.only(top: 10, left: 10, right: 10),
               width: MediaQuery.of(context).size.width,
-              height: 70,
+              height: 30,
               child: Center(
                 child: Text(
                   "The amount of input tokens to send :",
@@ -122,19 +174,22 @@ class _SwapTokenForTokenState extends State<SwapTokenForToken> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(15),
+              padding: EdgeInsets.all(10),
               width: MediaQuery.of(context).size.width,
               child: TextField1(
-                hint: "E.g. 0xc7..Ab",
+                hint: "E.g. 0.2",
                 label: "",
-                controller: toContractAddress,
+                controller: amountIn,
                 inputType: TextInputType.text,
+                validator: true,
+                errorText: "",
               ),
             ),
+            Divider(),
             Container(
-              padding: EdgeInsets.all(15),
+              padding: EdgeInsets.only(top: 10, left: 10, right: 10),
               width: MediaQuery.of(context).size.width,
-              height: 70,
+              height: 30,
               child: Center(
                 child: Text(
                   "Gas :",
@@ -143,19 +198,22 @@ class _SwapTokenForTokenState extends State<SwapTokenForToken> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(15),
+              padding: EdgeInsets.all(10),
               width: MediaQuery.of(context).size.width,
               child: TextField1(
-                hint: "E.g. 0xc7..Ab",
+                hint: "E.g. 120000",
                 label: "",
-                controller: toContractAddress,
-                inputType: TextInputType.text,
+                controller: gas,
+                inputType: TextInputType.number,
+                validator: true,
+                errorText: "",
               ),
             ),
+            Divider(),
             Container(
-              padding: EdgeInsets.all(15),
+              padding: EdgeInsets.only(top: 10, left: 10, right: 10),
               width: MediaQuery.of(context).size.width,
-              height: 70,
+              height: 30,
               child: Center(
                 child: Text(
                   "Gas Price:",
@@ -166,13 +224,44 @@ class _SwapTokenForTokenState extends State<SwapTokenForToken> {
             Container(
               padding: EdgeInsets.all(15),
               width: MediaQuery.of(context).size.width,
-              child: TextField1(
-                hint: "E.g. 0xc7..Ab",
-                label: "",
-                controller: toContractAddress,
-                inputType: TextInputType.text,
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: TextField1(
+                      hint: "E.g. 1.000000009(in gwei)",
+                      label: "",
+                      controller: gasPrice,
+                      inputType: TextInputType.number,
+                      validator: true,
+                      errorText: "",
+                    ),
+                  ),
+                  Expanded(
+                      child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0, bottom: 20.0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: kPrimaryColor,
+                        onPrimary: Colors.white,
+                        onSurface: Colors.grey,
+                      ),
+                      onPressed: () async {
+                        gasPrice.text = ".........";
+                        Map<String, dynamic> m = await estimateGasPriceAPI(
+                            network: walletController.network);
+                        gasPrice.text = (m["GasPrice"] ?? "").toString();
+                      },
+                      child: Text(
+                        "Estimate",
+                        style: TextStyle(fontSize: 10),
+                      ),
+                    ),
+                  ))
+                ],
               ),
             ),
+            Divider(),
             Container(
               padding: EdgeInsets.all(15),
               width: MediaQuery.of(context).size.width,
@@ -219,17 +308,19 @@ class _SwapTokenForTokenState extends State<SwapTokenForToken> {
                           color: Colors.black54,
                           fontWeight: FontWeight.bold),
                     ),
-
                     Container(
-                      width: 160,
-                      child: Text(
-                        "3000000000000000000000000000.000 DAI",
-                        style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black54,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    )
+                        width: 160,
+                        child: GetBuilder<SwapTokenForTokenController>(
+                          builder: (STC) {
+                            return Text(
+                              STC.estimatedamountsOut + STC.amountsOutToken,
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black54,
+                                  fontWeight: FontWeight.bold),
+                            );
+                          },
+                        ))
                   ],
                 ),
                 decoration: BoxDecoration(
@@ -237,6 +328,30 @@ class _SwapTokenForTokenState extends State<SwapTokenForToken> {
                     borderRadius: BorderRadius.circular(20)),
               ),
             ),
+            Divider(),
+            Padding(
+              padding: const EdgeInsets.all(25.0),
+              child: InkWell(
+                onTap: (){
+                  swapTokenForTokenController.estimateGasForSwappingToken(network: walletController.network, fromContractAddress: walletController.eRC20TokenBox.getAt(widget.tokenIndex - 1) ?? '', toContractAddress: toContractAddress.text, from: "0x"+walletController.activeAccount, amountIn: amountIn.text, context: context);
+                },
+                child: Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: kPrimaryColor
+                  ),
+                  child: Center(
+                    child: Text(
+                        "Swap",
+                         style: TextStyle(
+                           color: Colors.white
+                         ),
+                    ),
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),

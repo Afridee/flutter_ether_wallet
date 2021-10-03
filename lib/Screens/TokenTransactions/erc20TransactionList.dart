@@ -16,7 +16,7 @@ class Erc20Transactionlist extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<WalletController>(
-      builder: (wC){
+      builder: (wC) {
         return ListView.separated(
           separatorBuilder: (context, index) {
             return Divider();
@@ -26,41 +26,47 @@ class Erc20Transactionlist extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: ListTile(
-                onTap: () async {
-
-                },
+                onTap: () async {},
                 trailing: Icon(
                   Ionicons.arrow_forward,
                   color:
-                  wC.erc20transfers[index].from == "0x" + wC.activeAccount ? Colors.redAccent : Color(0xff3cad89),
+                      wC.erc20transfers[index].from == "0x" + wC.activeAccount
+                          ? Colors.redAccent
+                          : Color(0xff3cad89),
                 ),
                 title: Text(
                   wC.erc20transfers[index].from == "0x" + wC.activeAccount
                       ? (double.parse(wC.erc20transfers[index].value) /
-                      double.parse((pow(10, 18)).toString()))
-                      .toStringAsFixed(3) +
-                      " " +
-                      wC.erc20transfers[index].tokenSymbol +
-                      "\nsent"
+                                  double.parse(
+                                    (pow(10, 18)).toString(),
+                                  ))
+                              .toStringAsFixed(3) +
+                          " " +
+                          wC.erc20transfers[index].tokenSymbol +
+                          "\nsent"
                       : (double.parse(wC.erc20transfers[index].value) /
-                      double.parse((pow(10, 18)).toString()))
-                      .toStringAsFixed(3) +
-                      " " +
-                      wC.erc20transfers[index].tokenSymbol +
-                      "\nreceived",
+                                  double.parse(
+                                    (pow(10, 18)).toString(),
+                                  ))
+                              .toStringAsFixed(3) +
+                          " " +
+                          wC.erc20transfers[index].tokenSymbol +
+                          "\nreceived",
                   style: TextStyle(
                       color: wC.erc20transfers[index].from ==
-                          "0x" + wC.activeAccount
+                              "0x" + wC.activeAccount
                           ? Colors.redAccent
                           : Color(0xff3cad89),
                       fontWeight: FontWeight.bold,
                       fontSize: 18),
                 ),
-                subtitle: Text(TimeStampToDate(int.parse(wC.erc20transfers[index].timeStamp)*1000)),
+                subtitle: Text(TimeStampToDate(
+                    int.parse(wC.erc20transfers[index].timeStamp) * 1000)),
                 leading: CircleAvatar(
-                  backgroundColor: wC.erc20transfers[index].from == "0x" + wC.activeAccount
-                      ? Color(0xffffeaef)
-                      : Color(0xffc6fae0),
+                  backgroundColor:
+                      wC.erc20transfers[index].from == "0x" + wC.activeAccount
+                          ? Color(0xffffeaef)
+                          : Color(0xffc6fae0),
                   radius: 30,
                   child: Column(
                     children: [
@@ -69,14 +75,16 @@ class Erc20Transactionlist extends StatelessWidget {
                         wC.erc20transfers[index].from == "0x" + wC.activeAccount
                             ? Ionicons.arrow_up
                             : Ionicons.arrow_down,
-                        color: wC.erc20transfers[index].from == "0x" + wC.activeAccount
+                        color: wC.erc20transfers[index].from ==
+                                "0x" + wC.activeAccount
                             ? Colors.redAccent
                             : Color(0xff3cad89),
                         size: 10,
                       ),
                       Icon(
                         Ionicons.wallet,
-                        color: wC.erc20transfers[index].from == "0x" + wC.activeAccount
+                        color: wC.erc20transfers[index].from ==
+                                "0x" + wC.activeAccount
                             ? Colors.redAccent
                             : Color(0xff3cad89),
                       ),

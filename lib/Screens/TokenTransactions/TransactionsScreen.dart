@@ -30,7 +30,7 @@ class TransactionScreen extends StatefulWidget {
 
 class _TransactionScreenState extends State<TransactionScreen> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return Scaffold(
       backgroundColor: kPrimaryColor,
       body: Container(
@@ -137,7 +137,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                      Navigator.push(
                                        context,
                                        MaterialPageRoute(
-                                         builder: (context) => new SwapTokenForToken(),
+                                         builder: (context) => new SwapTokenForToken(tokenIndex: widget.tokenIndex),
                                        ),
                                      );
                                    }else{//token is ether then...

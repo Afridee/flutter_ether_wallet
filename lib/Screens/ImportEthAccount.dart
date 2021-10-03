@@ -21,7 +21,6 @@ class _ImportEthAccountScreenState extends State<ImportEthAccountScreen> {
     privateKey.dispose();
     password.dispose();
     reEnteredpassword.dispose();
-    walletController.dispose();
     super.dispose();
   }
 
