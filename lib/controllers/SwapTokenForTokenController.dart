@@ -65,6 +65,7 @@ class SwapTokenForTokenController extends GetxController{
            print("estimatedGasNeeded: "+ estimatedGasNeeded);
            update();
          }else{
+
            AwesomeDialog(
              context: context,
              dialogType: DialogType.ERROR,
