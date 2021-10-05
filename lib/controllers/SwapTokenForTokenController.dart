@@ -17,6 +17,16 @@ class SwapTokenForTokenController extends GetxController{
    bool allowButtonPress = true;
    bool makeTheSwap = false;
 
+   reset(){
+     minOutPercentage = 0;
+     estimatedamountsOut = "Calculating.. ";
+     amountsOutToken = "";
+     estimatedGasNeeded = 0;
+     allowButtonPress = true;
+     makeTheSwap = false;
+     update();
+   }
+
    changeMinOutPercentage(int val){
      minOutPercentage = val;
      update();
@@ -52,7 +62,7 @@ class SwapTokenForTokenController extends GetxController{
      required BuildContext context,
      required bool showDialogue
    }) {
-     if(toContractAddress.length==42 && amountIn.length>0){
+     if(toContractAddress.length==42 && double.parse(amountIn=="" ? "0" : amountIn)>0){
        Timer(Duration(seconds: 3),() async{
          allowButtonPress = false;
          update();
@@ -67,19 +77,20 @@ class SwapTokenForTokenController extends GetxController{
            estimatedGasNeeded = m['estimatedGasNeeded'];
            makeTheSwap = true;
            update();
-
          }else{
-             if(showDialogue){
-               AwesomeDialog(
-                   context: context,
-                   dialogType: DialogType.ERROR,
-                   animType: AnimType.BOTTOMSLIDE,
-                   title: 'Oops!',
-                   desc: m["error"],
-                   btnOkOnPress: () {},
-                   btnOkColor: kPrimaryColor
-               )..show();
-             }
+           makeTheSwap = false;
+           update();
+           if(showDialogue){
+             AwesomeDialog(
+                 context: context,
+                 dialogType: DialogType.ERROR,
+                 animType: AnimType.BOTTOMSLIDE,
+                 title: 'Oops!',
+                 desc: m["error"],
+                 btnOkOnPress: () {},
+                 btnOkColor: kPrimaryColor
+             )..show();
+           }
          }
        });
        allowButtonPress = true;
@@ -96,37 +107,40 @@ class SwapTokenForTokenController extends GetxController{
      required String privateKey,
      required double gasPrice,
      }) async{
-     if(makeTheSwap){
-       allowButtonPress = false;
-       update();
-       Map<String, dynamic> m = await swapTokensAPI(network: network, fromContractAddress: fromContractAddress, toContractAddress: toContractAddress, amountIn: amountIn, gas: estimatedGasNeeded, privateKey: privateKey, gasPrice: gasPrice, minOutPercentage: minOutPercentage);
-       if(m["error"]==null){
-         FlutterClipboard.copy(m["transactionHash"]).then((value) => {
-         AwesomeDialog(
-         context: context,
-         dialogType: DialogType.SUCCES,
-         animType: AnimType.BOTTOMSLIDE,
-         title: 'Transaction hash is copied to clipboard',
-         desc: "You can use it to see the status of your transaction in websites like etherscan.io",
-         btnOkOnPress: () {},
-         btnOkColor: kPrimaryColor
-         )..show()
-         });
-       }else{
-         AwesomeDialog(
-             context: context,
-             dialogType: DialogType.ERROR,
-             animType: AnimType.BOTTOMSLIDE,
-             title: 'Oops!',
-             desc: m["error"],
-             btnOkOnPress: () {},
-             btnOkColor: kPrimaryColor
-         )..show();
-       }
-       makeTheSwap = false;
+     if(makeTheSwap && allowButtonPress){
+       Timer(Duration(seconds: 10),() async{
+         allowButtonPress = false;
+         update();
+         Map<String, dynamic> m = await swapTokensAPI(network: network, fromContractAddress: fromContractAddress, toContractAddress: toContractAddress, amountIn: amountIn, gas: estimatedGasNeeded, privateKey: privateKey, gasPrice: gasPrice, minOutPercentage: minOutPercentage);
+         if(m["error"]==null){
+           Navigator.of(context).pop();
+           FlutterClipboard.copy(m["transactionHash"]).then((value) => {
+             AwesomeDialog(
+                 context: context,
+                 dialogType: DialogType.SUCCES,
+                 animType: AnimType.BOTTOMSLIDE,
+                 title: 'Transaction hash is copied to clipboard',
+                 desc: "You can use it to see the status of your transaction in websites like etherscan.io",
+             )..show()
+           });
+         }else{
+           AwesomeDialog(
+               context: context,
+               dialogType: DialogType.ERROR,
+               animType: AnimType.BOTTOMSLIDE,
+               title: 'Oops!',
+               desc: m["error"],
+               btnOkOnPress: () {},
+               btnOkColor: kPrimaryColor
+           )..show();
+         }
+         makeTheSwap = false;
+         update();
+       });
        allowButtonPress = true;
        update();
      }
+
    }
 
 }

@@ -64,6 +64,7 @@ class _SwapTokenForTokenState extends State<SwapTokenForToken> {
 
   @override
   void dispose() {
+    swapTokenForTokenController.reset();
     toContractAddress.dispose();
     amountIn.dispose();
     privateKey.dispose();
@@ -187,7 +188,7 @@ class _SwapTokenForTokenState extends State<SwapTokenForToken> {
                 hint: "E.g. 0.2",
                 label: "",
                 controller: amountIn,
-                inputType: TextInputType.text,
+                inputType: TextInputType.number,
                 validator: true,
                 errorText: "",
               ),
