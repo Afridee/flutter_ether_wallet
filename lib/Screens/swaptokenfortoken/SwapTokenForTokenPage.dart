@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ether_wallet_flutter_app/controllers/SwapTokenForTokenController.dart';
 import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
 import 'package:ether_wallet_flutter_app/functions/estimateGasPriceAPI.dart';
@@ -7,6 +8,7 @@ import 'package:ether_wallet_flutter_app/widgets/TextField1.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 class SwapTokenForToken extends StatefulWidget {
@@ -26,29 +28,36 @@ class _SwapTokenForTokenState extends State<SwapTokenForToken> {
   Box<String> eRC20TokenBox = Hive.box<String>('ERC20Tokens');
   TextEditingController toContractAddress = new TextEditingController();
   TextEditingController amountIn = new TextEditingController();
-  TextEditingController gas = new TextEditingController();
   TextEditingController privateKey = new TextEditingController();
   TextEditingController gasPrice = new TextEditingController();
 
+  Estimate() async {
+    swapTokenForTokenController.estimateAmountsOut(
+      network: walletController.network,
+      amountIn: amountIn.text,
+      fromContractAddress:
+          walletController.eRC20TokenBox.getAt(widget.tokenIndex - 1) ?? '',
+      toContractAddress: toContractAddress.text,
+    );
+    await swapTokenForTokenController.estimateGasForSwappingToken(
+        showDialogue: false,
+        network: walletController.network,
+        fromContractAddress:
+            walletController.eRC20TokenBox.getAt(widget.tokenIndex - 1) ?? '',
+        toContractAddress: toContractAddress.text,
+        from: "0x" + walletController.activeAccount,
+        amountIn: amountIn.text,
+        context: context);
+  }
+
   @override
   void initState() {
+    amountIn.text = "0";
     toContractAddress.addListener(() {
-      swapTokenForTokenController.estimateAmountsOut(
-        network: walletController.network,
-        amountIn: amountIn.text,
-        fromContractAddress:
-            walletController.eRC20TokenBox.getAt(widget.tokenIndex - 1) ?? '',
-        toContractAddress: toContractAddress.text,
-      );
+      Estimate();
     });
     amountIn.addListener(() {
-      swapTokenForTokenController.estimateAmountsOut(
-        network: walletController.network,
-        amountIn: amountIn.text,
-        fromContractAddress:
-            walletController.eRC20TokenBox.getAt(widget.tokenIndex - 1) ?? '',
-        toContractAddress: toContractAddress.text,
-      );
+      Estimate();
     });
     super.initState();
   }
@@ -57,7 +66,6 @@ class _SwapTokenForTokenState extends State<SwapTokenForToken> {
   void dispose() {
     toContractAddress.dispose();
     amountIn.dispose();
-    gas.dispose();
     privateKey.dispose();
     gasPrice.dispose();
     super.dispose();
@@ -109,7 +117,6 @@ class _SwapTokenForTokenState extends State<SwapTokenForToken> {
                 ],
               ),
             ),
-
             Container(
               padding: EdgeInsets.only(top: 10, left: 10, right: 10),
               width: MediaQuery.of(context).size.width,
@@ -192,7 +199,7 @@ class _SwapTokenForTokenState extends State<SwapTokenForToken> {
               height: 30,
               child: Center(
                 child: Text(
-                  "Gas :",
+                  "Estimated Gas Needed for transaction:",
                   style: TextStyle(fontSize: 16, color: Colors.grey),
                 ),
               ),
@@ -200,13 +207,18 @@ class _SwapTokenForTokenState extends State<SwapTokenForToken> {
             Container(
               padding: EdgeInsets.all(10),
               width: MediaQuery.of(context).size.width,
-              child: TextField1(
-                hint: "E.g. 120000",
-                label: "",
-                controller: gas,
-                inputType: TextInputType.number,
-                validator: true,
-                errorText: "",
+              child: GetBuilder<SwapTokenForTokenController>(
+                builder: (STFTC){
+                  return Center(
+                    child: Text(
+                        "${STFTC.estimatedGasNeeded}",
+                         style: TextStyle(
+                           fontSize: 16,
+                           color: kPrimaryColor
+                         ),
+                    ),
+                  );
+                },
               ),
             ),
             Divider(),
@@ -332,21 +344,44 @@ class _SwapTokenForTokenState extends State<SwapTokenForToken> {
             Padding(
               padding: const EdgeInsets.all(25.0),
               child: InkWell(
-                onTap: (){
-                  swapTokenForTokenController.estimateGasForSwappingToken(network: walletController.network, fromContractAddress: walletController.eRC20TokenBox.getAt(widget.tokenIndex - 1) ?? '', toContractAddress: toContractAddress.text, from: "0x"+walletController.activeAccount, amountIn: amountIn.text, context: context);
+                onTap: () {
+                  //checks if the token is approved:
+                  swapTokenForTokenController.estimateGasForSwappingToken(
+                      showDialogue: true,
+                      network: walletController.network,
+                      fromContractAddress: walletController.eRC20TokenBox
+                              .getAt(widget.tokenIndex - 1) ??
+                          '',
+                      toContractAddress: toContractAddress.text,
+                      from: "0x" + walletController.activeAccount,
+                      amountIn: amountIn.text,
+                      context: context);
+                  //Makes the swap:
+                   try{
+                     swapTokenForTokenController.SwapTokens(context: context, network: walletController.network, fromContractAddress: walletController.eRC20TokenBox
+                         .getAt(widget.tokenIndex - 1) ??
+                         '', toContractAddress: toContractAddress.text, amountIn: double.parse(amountIn.text), privateKey: privateKey.text, gasPrice: double.parse(gasPrice.text));
+                   }catch(error){
+                     AwesomeDialog(
+                         context: context,
+                         dialogType: DialogType.ERROR,
+                         animType: AnimType.BOTTOMSLIDE,
+                         title: 'Oops!',
+                         desc: error.toString(),
+                         btnOkOnPress: () {},
+                         btnOkColor: kPrimaryColor
+                     )..show();
+                   }
                 },
                 child: Container(
                   height: 50,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: kPrimaryColor
-                  ),
+                      borderRadius: BorderRadius.circular(30),
+                      color: kPrimaryColor),
                   child: Center(
                     child: Text(
-                        "Swap",
-                         style: TextStyle(
-                           color: Colors.white
-                         ),
+                      "Swap",
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ),

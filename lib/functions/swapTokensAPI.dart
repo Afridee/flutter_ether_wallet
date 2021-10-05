@@ -6,7 +6,7 @@ Future<Map<String, dynamic>> swapTokensAPI(
     {required String network,
       required String fromContractAddress,
       required String toContractAddress,
-      required int amountIn,
+      required double amountIn,
       required int gas,
       required String privateKey,
       required double gasPrice,
@@ -29,11 +29,5 @@ Future<Map<String, dynamic>> swapTokensAPI(
     }),
   );
 
-  if(response.statusCode==200){
-    return jsonDecode(response.body);
-  }else{
-    return {
-      "error" : response.body
-    };
-  }
+  return jsonDecode(response.body);
 }

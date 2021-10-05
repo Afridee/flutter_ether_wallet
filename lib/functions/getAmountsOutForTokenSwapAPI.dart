@@ -22,12 +22,5 @@ Future<Map<String, dynamic>> estimateAmountsOutAPI(
     }),
   );
 
-  print(response.body);
-  if(response.statusCode==200){
-    return jsonDecode(response.body);
-  }else{
-    return {
-      "error" : response.body
-    };
-  }
+  return jsonDecode(response.body);
 }

@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:clipboard/clipboard.dart';
 import 'package:ether_wallet_flutter_app/functions/estimateGasForSwappingTokenAPI.dart';
 import 'package:ether_wallet_flutter_app/functions/getAmountsOutForTokenSwapAPI.dart';
+import 'package:ether_wallet_flutter_app/functions/swapTokensAPI.dart';
 import 'package:ether_wallet_flutter_app/utils/constants.dart';
-import 'package:ether_wallet_flutter_app/widgets/snackbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +13,9 @@ class SwapTokenForTokenController extends GetxController{
    int minOutPercentage = 0;
    String estimatedamountsOut = "Calculating.. ";
    String amountsOutToken = "";
-   String estimatedGasNeeded = "0";
+   int estimatedGasNeeded = 0;
    bool allowButtonPress = true;
+   bool makeTheSwap = false;
 
    changeMinOutPercentage(int val){
      minOutPercentage = val;
@@ -47,7 +49,8 @@ class SwapTokenForTokenController extends GetxController{
      required String toContractAddress,
      required String from,
      required String amountIn,
-     required BuildContext context
+     required BuildContext context,
+     required bool showDialogue
    }) {
      if(toContractAddress.length==42 && amountIn.length>0){
        Timer(Duration(seconds: 3),() async{
@@ -61,22 +64,66 @@ class SwapTokenForTokenController extends GetxController{
            amountIn : amountIn,
          );
          if(m["error"]==null){
-           estimatedGasNeeded = m['estimatedGasNeeded'] ?? "...";
-           print("estimatedGasNeeded: "+ estimatedGasNeeded);
+           estimatedGasNeeded = m['estimatedGasNeeded'];
+           makeTheSwap = true;
            update();
-         }else{
 
-           AwesomeDialog(
+         }else{
+             if(showDialogue){
+               AwesomeDialog(
+                   context: context,
+                   dialogType: DialogType.ERROR,
+                   animType: AnimType.BOTTOMSLIDE,
+                   title: 'Oops!',
+                   desc: m["error"],
+                   btnOkOnPress: () {},
+                   btnOkColor: kPrimaryColor
+               )..show();
+             }
+         }
+       });
+       allowButtonPress = true;
+       update();
+     }
+   }
+
+   SwapTokens({
+     required BuildContext context,
+     required String network,
+     required String fromContractAddress,
+     required String toContractAddress,
+     required double amountIn,
+     required String privateKey,
+     required double gasPrice,
+     }) async{
+     if(makeTheSwap){
+       allowButtonPress = false;
+       update();
+       Map<String, dynamic> m = await swapTokensAPI(network: network, fromContractAddress: fromContractAddress, toContractAddress: toContractAddress, amountIn: amountIn, gas: estimatedGasNeeded, privateKey: privateKey, gasPrice: gasPrice, minOutPercentage: minOutPercentage);
+       if(m["error"]==null){
+         FlutterClipboard.copy(m["transactionHash"]).then((value) => {
+         AwesomeDialog(
+         context: context,
+         dialogType: DialogType.SUCCES,
+         animType: AnimType.BOTTOMSLIDE,
+         title: 'Transaction hash is copied to clipboard',
+         desc: "You can use it to see the status of your transaction in websites like etherscan.io",
+         btnOkOnPress: () {},
+         btnOkColor: kPrimaryColor
+         )..show()
+         });
+       }else{
+         AwesomeDialog(
              context: context,
              dialogType: DialogType.ERROR,
              animType: AnimType.BOTTOMSLIDE,
              title: 'Oops!',
-             desc: m["error"]+"\nNote: Please make sure you have approved the erc20 token before swapping",
+             desc: m["error"],
              btnOkOnPress: () {},
              btnOkColor: kPrimaryColor
-           )..show();
-         }
-       });
+         )..show();
+       }
+       makeTheSwap = false;
        allowButtonPress = true;
        update();
      }
