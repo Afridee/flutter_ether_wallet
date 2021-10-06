@@ -13,7 +13,7 @@ Future<Map<String, dynamic>> getERC20transactions(
     required int offset}) async {
   final String apiKey = dotenv.env['ETHERSCAN_API_KEY'].toString();
   String link =
-      "https://api$network.etherscan.io/api?module=account&action=tokentx&contractaddress=$contractaddress&address=$address&page=$page&offset=$offset&sort=asc&apikey=$apiKey";
+      "https://api$network.etherscan.io/api?module=account&action=tokentx&contractaddress=$contractaddress&address=$address&page=$page&offset=$offset&sort=desc&apikey=$apiKey";
   var url = Uri.parse(link);
 
   var response = await http.get(url);

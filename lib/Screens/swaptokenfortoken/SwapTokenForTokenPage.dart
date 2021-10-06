@@ -2,13 +2,11 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ether_wallet_flutter_app/controllers/SwapTokenForTokenController.dart';
 import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
 import 'package:ether_wallet_flutter_app/functions/estimateGasPriceAPI.dart';
-import 'package:ether_wallet_flutter_app/functions/getAmountsOutForTokenSwapAPI.dart';
 import 'package:ether_wallet_flutter_app/utils/constants.dart';
 import 'package:ether_wallet_flutter_app/widgets/TextField1.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 class SwapTokenForToken extends StatefulWidget {
@@ -346,45 +344,51 @@ class _SwapTokenForTokenState extends State<SwapTokenForToken> {
               padding: const EdgeInsets.all(25.0),
               child: InkWell(
                 onTap: () {
-                  //checks if the token is approved:
-                  swapTokenForTokenController.estimateGasForSwappingToken(
-                      showDialogue: true,
-                      network: walletController.network,
-                      fromContractAddress: walletController.eRC20TokenBox
-                              .getAt(widget.tokenIndex - 1) ??
-                          '',
-                      toContractAddress: toContractAddress.text,
-                      from: "0x" + walletController.activeAccount,
-                      amountIn: amountIn.text,
-                      context: context);
-                  //Makes the swap:
-                   try{
-                     swapTokenForTokenController.SwapTokens(context: context, network: walletController.network, fromContractAddress: walletController.eRC20TokenBox
-                         .getAt(widget.tokenIndex - 1) ??
-                         '', toContractAddress: toContractAddress.text, amountIn: double.parse(amountIn.text), privateKey: privateKey.text, gasPrice: double.parse(gasPrice.text));
-                   }catch(error){
-                     AwesomeDialog(
-                         context: context,
-                         dialogType: DialogType.ERROR,
-                         animType: AnimType.BOTTOMSLIDE,
-                         title: 'Oops!',
-                         desc: error.toString(),
-                         btnOkOnPress: () {},
-                         btnOkColor: kPrimaryColor
-                     )..show();
-                   }
+                  if(swapTokenForTokenController.allowButtonPress){
+                    //checks if the token is approved:
+                    swapTokenForTokenController.estimateGasForSwappingToken(
+                        showDialogue: true,
+                        network: walletController.network,
+                        fromContractAddress: walletController.eRC20TokenBox
+                            .getAt(widget.tokenIndex - 1) ??
+                            '',
+                        toContractAddress: toContractAddress.text,
+                        from: "0x" + walletController.activeAccount,
+                        amountIn: amountIn.text,
+                        context: context);
+                    //Makes the swap:
+                    try{
+                      swapTokenForTokenController.SwapTokens(context: context, network: walletController.network, fromContractAddress: walletController.eRC20TokenBox
+                          .getAt(widget.tokenIndex - 1) ??
+                          '', toContractAddress: toContractAddress.text, amountIn: double.parse(amountIn.text), privateKey: privateKey.text, gasPrice: double.parse(gasPrice.text));
+                    }catch(error){
+                      AwesomeDialog(
+                          context: context,
+                          dialogType: DialogType.ERROR,
+                          animType: AnimType.BOTTOMSLIDE,
+                          title: 'Oops!',
+                          desc: error.toString(),
+                          btnOkOnPress: () {},
+                          btnOkColor: kPrimaryColor
+                      )..show();
+                    }
+                  }
                 },
-                child: Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      color: kPrimaryColor),
-                  child: Center(
-                    child: Text(
-                      "Swap",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
+                child: GetBuilder<SwapTokenForTokenController>(
+                  builder: (stftc){
+                    return Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: kPrimaryColor),
+                      child: Center(
+                        child: Text(
+                          stftc.allowButtonPress?  "Swap" : "Processing...",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
             )

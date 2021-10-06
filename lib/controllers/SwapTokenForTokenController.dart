@@ -61,38 +61,36 @@ class SwapTokenForTokenController extends GetxController{
      required String amountIn,
      required BuildContext context,
      required bool showDialogue
-   }) {
+   }) async{
      if(toContractAddress.length==42 && double.parse(amountIn=="" ? "0" : amountIn)>0){
-       Timer(Duration(seconds: 3),() async{
-         allowButtonPress = false;
+       allowButtonPress = false;
+       update();
+       Map<String, dynamic> m = await estimateGasForSwappingTokenAPI(
+         network : network,
+         fromContractAddress : fromContractAddress,
+         toContractAddress : toContractAddress,
+         from : from,
+         amountIn : amountIn,
+       );
+       if(m["error"]==null){
+         estimatedGasNeeded = m['estimatedGasNeeded'];
+         makeTheSwap = true;
          update();
-         Map<String, dynamic> m = await estimateGasForSwappingTokenAPI(
-           network : network,
-           fromContractAddress : fromContractAddress,
-           toContractAddress : toContractAddress,
-           from : from,
-           amountIn : amountIn,
-         );
-         if(m["error"]==null){
-           estimatedGasNeeded = m['estimatedGasNeeded'];
-           makeTheSwap = true;
-           update();
-         }else{
-           makeTheSwap = false;
-           update();
-           if(showDialogue){
-             AwesomeDialog(
-                 context: context,
-                 dialogType: DialogType.ERROR,
-                 animType: AnimType.BOTTOMSLIDE,
-                 title: 'Oops!',
-                 desc: m["error"],
-                 btnOkOnPress: () {},
-                 btnOkColor: kPrimaryColor
-             )..show();
-           }
+       }else{
+         makeTheSwap = false;
+         update();
+         if(showDialogue){
+           AwesomeDialog(
+               context: context,
+               dialogType: DialogType.ERROR,
+               animType: AnimType.BOTTOMSLIDE,
+               title: 'Oops!',
+               desc: m["error"],
+               btnOkOnPress: () {},
+               btnOkColor: kPrimaryColor
+           )..show();
          }
-       });
+       }
        allowButtonPress = true;
        update();
      }
@@ -108,37 +106,37 @@ class SwapTokenForTokenController extends GetxController{
      required double gasPrice,
      }) async{
      if(makeTheSwap && allowButtonPress){
-       Timer(Duration(seconds: 10),() async{
-         allowButtonPress = false;
-         update();
-         Map<String, dynamic> m = await swapTokensAPI(network: network, fromContractAddress: fromContractAddress, toContractAddress: toContractAddress, amountIn: amountIn, gas: estimatedGasNeeded, privateKey: privateKey, gasPrice: gasPrice, minOutPercentage: minOutPercentage);
-         if(m["error"]==null){
-           Navigator.of(context).pop();
-           FlutterClipboard.copy(m["transactionHash"]).then((value) => {
-             AwesomeDialog(
-                 context: context,
-                 dialogType: DialogType.SUCCES,
-                 animType: AnimType.BOTTOMSLIDE,
-                 title: 'Transaction hash is copied to clipboard',
-                 desc: "You can use it to see the status of your transaction in websites like etherscan.io",
-             )..show()
-           });
-         }else{
-           AwesomeDialog(
-               context: context,
-               dialogType: DialogType.ERROR,
-               animType: AnimType.BOTTOMSLIDE,
-               title: 'Oops!',
-               desc: m["error"],
-               btnOkOnPress: () {},
-               btnOkColor: kPrimaryColor
-           )..show();
-         }
-         makeTheSwap = false;
+       allowButtonPress = false;
+       update();
+       // Map<String, dynamic> m = await swapTokensAPI(network: network, fromContractAddress: fromContractAddress, toContractAddress: toContractAddress, amountIn: amountIn, gas: estimatedGasNeeded, privateKey: privateKey, gasPrice: gasPrice, minOutPercentage: minOutPercentage);
+       // if(m["error"]==null){
+       //   Navigator.of(context).pop();
+       //   FlutterClipboard.copy(m["transactionHash"]).then((value) => {
+       //     AwesomeDialog(
+       //         context: context,
+       //         dialogType: DialogType.SUCCES,
+       //         animType: AnimType.BOTTOMSLIDE,
+       //         title: 'Transaction hash is copied to clipboard',
+       //         desc: "You can use it to see the status of your transaction in websites like etherscan.io",
+       //     )..show()
+       //   });
+       // }else{
+       //   AwesomeDialog(
+       //       context: context,
+       //       dialogType: DialogType.ERROR,
+       //       animType: AnimType.BOTTOMSLIDE,
+       //       title: 'Oops!',
+       //       desc: m["error"],
+       //       btnOkOnPress: () {},
+       //       btnOkColor: kPrimaryColor
+       //   )..show();
+       // }
+       makeTheSwap = false;
+       update();
+       Timer(Duration(seconds: 5),() async{
+         allowButtonPress = true;
          update();
        });
-       allowButtonPress = true;
-       update();
      }
 
    }
