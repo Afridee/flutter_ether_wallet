@@ -1,3 +1,4 @@
+import 'Home/Home.dart';
 import 'Home/HomePage.dart';
 import 'package:ether_wallet_flutter_app/controllers/localAuthenticationController.dart';
 import 'package:ether_wallet_flutter_app/controllers/loginController.dart';
@@ -61,7 +62,7 @@ class AuthenticationPage extends StatelessWidget {
                 loginController.logOut();
               }, child: Text("Log out")),
             ],
-          ) : HomeScreen(),
+          ) : Home(),
         );
       },
     );

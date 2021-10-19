@@ -108,29 +108,29 @@ class SwapTokenForTokenController extends GetxController{
      if(makeTheSwap && allowButtonPress){
        allowButtonPress = false;
        update();
-       // Map<String, dynamic> m = await swapTokensAPI(network: network, fromContractAddress: fromContractAddress, toContractAddress: toContractAddress, amountIn: amountIn, gas: estimatedGasNeeded, privateKey: privateKey, gasPrice: gasPrice, minOutPercentage: minOutPercentage);
-       // if(m["error"]==null){
-       //   Navigator.of(context).pop();
-       //   FlutterClipboard.copy(m["transactionHash"]).then((value) => {
-       //     AwesomeDialog(
-       //         context: context,
-       //         dialogType: DialogType.SUCCES,
-       //         animType: AnimType.BOTTOMSLIDE,
-       //         title: 'Transaction hash is copied to clipboard',
-       //         desc: "You can use it to see the status of your transaction in websites like etherscan.io",
-       //     )..show()
-       //   });
-       // }else{
-       //   AwesomeDialog(
-       //       context: context,
-       //       dialogType: DialogType.ERROR,
-       //       animType: AnimType.BOTTOMSLIDE,
-       //       title: 'Oops!',
-       //       desc: m["error"],
-       //       btnOkOnPress: () {},
-       //       btnOkColor: kPrimaryColor
-       //   )..show();
-       // }
+       Map<String, dynamic> m = await swapTokensAPI(network: network, fromContractAddress: fromContractAddress, toContractAddress: toContractAddress, amountIn: amountIn, gas: estimatedGasNeeded, privateKey: privateKey, gasPrice: gasPrice, minOutPercentage: minOutPercentage);
+       if(m["error"]==null){
+         Navigator.of(context).pop();
+         FlutterClipboard.copy(m["transactionHash"]).then((value) => {
+           AwesomeDialog(
+               context: context,
+               dialogType: DialogType.SUCCES,
+               animType: AnimType.BOTTOMSLIDE,
+               title: 'Transaction hash is copied to clipboard',
+               desc: "You can use it to see the status of your transaction in websites like etherscan.io",
+           )..show()
+         });
+       }else{
+         AwesomeDialog(
+             context: context,
+             dialogType: DialogType.ERROR,
+             animType: AnimType.BOTTOMSLIDE,
+             title: 'Oops!',
+             desc: m["error"],
+             btnOkOnPress: () {},
+             btnOkColor: kPrimaryColor
+         )..show();
+       }
        makeTheSwap = false;
        update();
        Timer(Duration(seconds: 5),() async{

@@ -1,5 +1,6 @@
 import 'package:ether_wallet_flutter_app/Screens/Home/TokenList.dart';
 import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import '../../widgets/AddTokenDialogue.dart';
 import 'package:get/get.dart';
 import '../../custom_widgets.dart/custom_appbar.dart';
@@ -8,9 +9,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
+import 'MenuScreen.dart';
 import 'homePageTopPart.dart';
 
 class HomeScreen extends StatefulWidget {
+
+  final drawerController;
+
+  const HomeScreen({Key? key,@required this.drawerController}) : super(key: key);
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -22,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     walletController.getEthAccounts();
+    final _drawerController = ZoomDrawerController();
     super.initState();
   }
 
@@ -34,8 +42,8 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: CustomAppBar(
         textTheme: _textTheme,
         title: '',
+        drawerController: widget.drawerController,
       ),
-      drawer: Drawer(),
       body: GetBuilder<WalletController>(
         builder: (wC){
           return ModalProgressHUD(
