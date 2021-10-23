@@ -29,6 +29,18 @@ class _SendEthersState extends State<SendEthers> {
   }
 
   @override
+  void dispose() {
+    toAddress.dispose();
+    value.dispose();
+    gasPrice.dispose();
+    privateKey.dispose();
+    sendEthController.reset();
+    super.dispose();
+  }
+
+
+
+  @override
   void initState() {
     toAddress.addListener(() {
       if (toAddress.text.isNotEmpty && value.text.isNotEmpty) {
@@ -172,7 +184,7 @@ class _SendEthersState extends State<SendEthers> {
               height: 30,
               child: Center(
                 child: Text(
-                  "Gas Price:",
+                  "Gas Price (in gwei):",
                   style: TextStyle(fontSize: 16, color: Colors.grey),
                 ),
               ),

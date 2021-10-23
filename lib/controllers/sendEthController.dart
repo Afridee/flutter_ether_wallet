@@ -12,6 +12,11 @@ class SendEthController extends GetxController {
   int estimatedGasNeeded = 0;
   bool allowButtonPress = true;
 
+  reset(){
+    estimatedGasNeeded = 0;
+    update();
+  }
+
   sendETH(
       {required String network,
       required String fromAddress,

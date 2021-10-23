@@ -1,6 +1,12 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:ether_wallet_flutter_app/controllers/swapetherwithtokesController.dart';
+import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
+import 'package:ether_wallet_flutter_app/functions/estimateGasPriceAPI.dart';
 import 'package:ether_wallet_flutter_app/utils/constants.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ether_wallet_flutter_app/widgets/TextField1.dart';
+import 'package:get/get.dart';
 
 class SwapEthersWithTokens extends StatefulWidget {
   @override
@@ -8,208 +14,340 @@ class SwapEthersWithTokens extends StatefulWidget {
 }
 
 class _SwapEthersWithTokensState extends State<SwapEthersWithTokens> {
-  TextEditingController toContractAddress = new TextEditingController();
+
+  TextEditingController tokenAddress = new TextEditingController();
+  TextEditingController value = new TextEditingController();
+  TextEditingController amountOutMin = new TextEditingController();
+  TextEditingController gasPrice = new TextEditingController();
+  TextEditingController privateKey = new TextEditingController();
+  final WalletController walletController = Get.put(WalletController());
+  final SwapetherwithtokesController swapetherwithtokesController = Get.put(SwapetherwithtokesController());
+
+  estmateGas() async{
+    swapetherwithtokesController.estimateGas(network: walletController.network, amountOutMin: amountOutMin.text, tokenAddress: tokenAddress.text, value: value.text, admin: "0x" + walletController.activeAccount);
+  }
+  estimateOutput() async{
+    amountOutMin.text = "Loading...";
+    try{
+      amountOutMin.text = await swapetherwithtokesController.estimateAmountsOut(network: walletController.network, toContractAddress: tokenAddress.text, amountIn: double.parse(value.text), context: context);
+    }catch(e){
+
+    }
+  }
+
+  @override
+  void initState() {
+    tokenAddress.addListener(() {
+      estmateGas();
+      estimateOutput();
+    });
+    value.addListener(() {
+      estmateGas();
+      estimateOutput();
+    });
+    amountOutMin.addListener(() {
+      estmateGas();
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    tokenAddress.dispose();
+    value.dispose();
+    amountOutMin.dispose();
+    gasPrice.dispose();
+    privateKey.dispose();
+    swapetherwithtokesController.reset();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        // child: Column(
-        //   crossAxisAlignment: CrossAxisAlignment.start,
-        //   children: [
-        //     Container(
-        //       width: MediaQuery.of(context).size.width,
-        //       color: kPrimaryColor.withOpacity(0.2),
-        //       child: Column(
-        //         crossAxisAlignment: CrossAxisAlignment.start,
-        //         children: [
-        //           SizedBox(
-        //             height: 30,
-        //           ),
-        //           IconButton(
-        //               onPressed: () {
-        //                 Navigator.of(context).pop();
-        //               },
-        //               iconSize: 40,
-        //               icon: Icon(Icons.arrow_back_rounded),
-        //               color: Colors.black),
-        //           SizedBox(
-        //             height: 30,
-        //           ),
-        //           Padding(
-        //             padding: const EdgeInsets.only(left: 15.0),
-        //             child: Text(
-        //               "Swap exact eth for tokens.",
-        //               style: TextStyle(fontSize: 25),
-        //             ),
-        //           ),
-        //           Padding(
-        //             padding: const EdgeInsets.all(15.0),
-        //             child: Text(
-        //               "This functionality uses Uniswap's 'swapExactETHForTokens' function to swap eth for tokens.",
-        //               style: TextStyle(fontSize: 15),
-        //             ),
-        //           ),
-        //           SizedBox(
-        //             height: 30,
-        //           ),
-        //         ],
-        //       ),
-        //     ),
-        //     SizedBox(
-        //       height: 30,
-        //     ),
-        //     Container(
-        //       padding: EdgeInsets.all(15),
-        //       width: MediaQuery.of(context).size.width,
-        //       height: 70,
-        //       child: Center(
-        //         child: Center(
-        //           child: Text(
-        //             "Contract Address of the token you want to swap with :",
-        //             textAlign: TextAlign.center,
-        //             style: TextStyle(
-        //                 fontSize: 16,
-        //                 color: Colors.grey
-        //             ),
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //     Container(
-        //       padding: EdgeInsets.all(15),
-        //       width: MediaQuery.of(context).size.width,
-        //       child: TextField1(
-        //         hint: "E.g. 0xc7..Ab",
-        //         label: "",
-        //         controller: toContractAddress,
-        //         inputType: TextInputType.text,
-        //       ),
-        //     ),
-        //     Container(
-        //       padding: EdgeInsets.all(15),
-        //       width: MediaQuery.of(context).size.width,
-        //       height: 70,
-        //       child: Center(
-        //         child: Text(
-        //           "Private key of active account: ",
-        //           style: TextStyle(
-        //               fontSize: 16,
-        //               color: Colors.grey
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //     Container(
-        //       padding: EdgeInsets.all(15),
-        //       width: MediaQuery.of(context).size.width,
-        //       child: TextField1(
-        //         hint: "E.g. c7..Ab",
-        //         label: "",
-        //         controller: toContractAddress,
-        //         inputType: TextInputType.text,
-        //       ),
-        //     ),
-        //     Container(
-        //       padding: EdgeInsets.all(15),
-        //       width: MediaQuery.of(context).size.width,
-        //       height: 70,
-        //       child: Center(
-        //         child: Text(
-        //           "The amount of input tokens to send :",
-        //           textAlign: TextAlign.center,
-        //           style: TextStyle(
-        //               fontSize: 16,
-        //               color: Colors.grey
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //     Container(
-        //       padding: EdgeInsets.all(15),
-        //       width: MediaQuery.of(context).size.width,
-        //       child: TextField1(
-        //         hint: "E.g. 0xc7..Ab",
-        //         label: "",
-        //         controller: toContractAddress,
-        //         inputType: TextInputType.text,
-        //       ),
-        //     ),
-        //     Container(
-        //       padding: EdgeInsets.all(15),
-        //       width: MediaQuery.of(context).size.width,
-        //       height: 70,
-        //       child: Center(
-        //         child: Text(
-        //           "Gas :",
-        //           style: TextStyle(
-        //               fontSize: 16,
-        //               color: Colors.grey
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //     Container(
-        //       padding: EdgeInsets.all(15),
-        //       width: MediaQuery.of(context).size.width,
-        //       child: TextField1(
-        //         hint: "E.g. 0xc7..Ab",
-        //         label: "",
-        //         controller: toContractAddress,
-        //         inputType: TextInputType.text,
-        //       ),
-        //     ),
-        //     Container(
-        //       padding: EdgeInsets.all(15),
-        //       width: MediaQuery.of(context).size.width,
-        //       height: 70,
-        //       child: Center(
-        //         child: Text(
-        //           "Gas Price:",
-        //           style: TextStyle(
-        //               fontSize: 16,
-        //               color: Colors.grey
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //     Container(
-        //       padding: EdgeInsets.all(15),
-        //       width: MediaQuery.of(context).size.width,
-        //       child: TextField1(
-        //         hint: "E.g. 0xc7..Ab",
-        //         label: "",
-        //         controller: toContractAddress,
-        //         inputType: TextInputType.text,
-        //       ),
-        //     ),
-        //     Container(
-        //       padding: EdgeInsets.all(15),
-        //       width: MediaQuery.of(context).size.width,
-        //       height: 70,
-        //       child: Center(
-        //         child: Text(
-        //           "The minimum amount of output tokens that must be received for the transaction not to revert :",
-        //           textAlign: TextAlign.center,
-        //           style: TextStyle(
-        //               fontSize: 16,
-        //               color: Colors.grey
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //     Container(
-        //       padding: EdgeInsets.all(15),
-        //       width: MediaQuery.of(context).size.width,
-        //       child: TextField1(
-        //         hint: "E.g. 0xc7..Ab",
-        //         label: "",
-        //         controller: toContractAddress,
-        //         inputType: TextInputType.text,
-        //       ),
-        //     ),
-        //   ],
-        // ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              color: kPrimaryColor.withOpacity(0.2),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 30,
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      iconSize: 40,
+                      icon: Icon(Icons.arrow_back_rounded),
+                      color: Colors.black),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15.0),
+                    child: Text(
+                      "Swap Ether with ERC20 token.",
+                      style: TextStyle(fontSize: 25),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Text(
+                      "Swap ether with an erc20 token.",
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+              width: MediaQuery.of(context).size.width,
+              height: 60,
+              child: Center(
+                child: Center(
+                  child: Text(
+                    "Contract Address of the token : ",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.all(10),
+              width: MediaQuery.of(context).size.width,
+              child: TextField1(
+                hint: "E.g. 0x...ff",
+                label: "",
+                controller: tokenAddress,
+                inputType: TextInputType.text,
+                validator: tokenAddress.text.length==42,
+                errorText: 'Contract address length should be 42 characters',
+              ),
+            ),
+            Divider(),
+            Container(
+              padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+              width: MediaQuery.of(context).size.width,
+              height: 30,
+              child: Center(
+                child: Text(
+                  "Amount to send (in Ether) :",
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.all(10),
+              width: MediaQuery.of(context).size.width,
+              child: TextField1(
+                hint: "E.g. 1.5",
+                label: "",
+                controller: value,
+                inputType: TextInputType.number,
+                validator: true,
+                errorText: '',
+              ),
+            ),
+            Divider(),
+            Container(
+              padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+              width: MediaQuery.of(context).size.width,
+              height: 30,
+              child: Center(
+                child: Text(
+                  "Gas Price (in gwei):",
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.all(15),
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: TextField1(
+                      hint: "E.g. 1.000000009(in gwei)",
+                      label: "",
+                      controller: gasPrice,
+                      inputType: TextInputType.number,
+                      validator: true,
+                      errorText: "",
+                    ),
+                  ),
+                  Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0, bottom: 20.0),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: kPrimaryColor,
+                            onPrimary: Colors.white,
+                            onSurface: Colors.grey,
+                          ),
+                          onPressed: () async {
+                            gasPrice.text = ".........";
+                            Map<String, dynamic> m = await estimateGasPriceAPI(
+                                network: walletController.network);
+                            gasPrice.text = (m["GasPrice"] ?? "").toString();
+                          },
+                          child: Text(
+                            "Estimate",
+                            style: TextStyle(fontSize: 10),
+                          ),
+                        ),
+                      ))
+                ],
+              ),
+            ),
+            Divider(),
+            Container(
+              padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+              width: MediaQuery.of(context).size.width,
+              height: 30,
+              child: Center(
+                child: Text(
+                  "Minimum amount of token you want in return:\n",
+                   textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.all(15),
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: TextField1(
+                      hint: "E.g. 1(in ether)",
+                      label: "",
+                      controller: amountOutMin,
+                      inputType: TextInputType.number,
+                      validator: true,
+                      errorText: "",
+                    ),
+                  ),
+                  Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0, bottom: 20.0),
+                        child: GetBuilder<SwapetherwithtokesController>(
+                          builder: (sewtc){
+                            return Text(
+                              sewtc.tokenName,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: kPrimaryColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20
+                              ),
+                            );
+                          },
+                        ),
+                      ))
+                ],
+              ),
+            ),
+            Divider(),
+            Container(
+              padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+              width: MediaQuery.of(context).size.width,
+              height: 30,
+              child: Center(
+                child: Text(
+                  "Estimated Gas Needed for transaction:",
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.all(10),
+              width: MediaQuery.of(context).size.width,
+              child: GetBuilder<SwapetherwithtokesController>(
+                builder: (sewtc) {
+                  return Center(
+                    child: Text(
+                      "${sewtc.estimatedGasNeeded}",
+                      style: TextStyle(fontSize: 16, color: kPrimaryColor),
+                    ),
+                  );
+                },
+              ),
+            ),
+            Divider(),
+            Container(
+              padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+              width: MediaQuery.of(context).size.width,
+              height: 30,
+              child: Center(
+                child: Text(
+                  "Private key of active account: ",
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.all(10),
+              width: MediaQuery.of(context).size.width,
+              child: TextField1(
+                hint: "E.g. c7..Ab",
+                label: "",
+                controller: privateKey,
+                inputType: TextInputType.text,
+                validator: privateKey.text.length == 64,
+                errorText: "private key length should be 64 characters",
+              ),
+            ),
+            Divider(),
+            Padding(
+              padding: const EdgeInsets.all(25.0),
+              child: InkWell(
+                onTap: () {
+                  try {
+                    swapetherwithtokesController.swap(network: walletController.network, privateKey: privateKey.text, tokenAddress: tokenAddress.text, amountOutMin: double.parse(amountOutMin.text), value: double.parse(value.text), gasPrice: double.parse(gasPrice.text), context: context);
+                  } catch (e) {
+                    AwesomeDialog(
+                        context: context,
+                        dialogType: DialogType.ERROR,
+                        animType: AnimType.BOTTOMSLIDE,
+                        title: 'Oops!',
+                        desc: e.toString(),
+                        btnOkOnPress: () {},
+                        btnOkColor: kPrimaryColor
+                    )..show();
+                  }
+                },
+                child: GetBuilder<SwapetherwithtokesController>(
+                  builder: (stftc) {
+                    return Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: kPrimaryColor),
+                      child: Center(
+                        child: Text(
+                          stftc.allowButtonPress ? "Swap" : "Processing...",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
