@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
-Future<Map> createWebhookForAddressActivity(
+Future<Map> create_Webhook_ForMinedTransactionNotifications(
     {required String appId,
     required String playerId,
     required List<String> ethAddresses}) async {
@@ -16,7 +16,7 @@ Future<Map> createWebhookForAddressActivity(
       },
       body: jsonEncode({
         "app_id": appId,
-        "webhook_type": 4,
+        "webhook_type": 2,
         "webhook_url": "$baseUrl/notifications/sendNotificationsForAddressActivity/$playerId",
         "addresses": ethAddresses
       }));

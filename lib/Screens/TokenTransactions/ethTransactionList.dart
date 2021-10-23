@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:ether_wallet_flutter_app/Screens/webview.dart';
 import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
 import 'package:ether_wallet_flutter_app/functions/DecodeInputDataAPI.dart';
 import 'package:ether_wallet_flutter_app/functions/TimestampToDateTime.dart';
@@ -29,8 +30,22 @@ class EthTransactionlist extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: wC.ethTransfers[index].input == "0x"
                   ? ListTile(
-                      onTap: () async {
-                         
+                      onTap: (){
+                          if(wC.network=="rinkeby"){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => new Webview(link: "https://rinkeby.etherscan.io/tx/${wC.ethTransfers[index].hash}"),
+                              ),
+                            );
+                          }else if(wC.network=="mainnet"){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => new Webview(link: "https://etherscan.io/tx/${wC.ethTransfers[index].hash}"),
+                              ),
+                            );
+                          }
                       },
                       trailing: Icon(
                         Ionicons.arrow_forward,
@@ -96,7 +111,22 @@ class EthTransactionlist extends StatelessWidget {
                       ),
                     )
                   : InkWell(
-                    onTap: () async{
+                    onTap: () {
+                      if(wC.network=="rinkeby"){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => new Webview(link: "https://rinkeby.etherscan.io/tx/${wC.ethTransfers[index].hash}"),
+                          ),
+                        );
+                      }else if(wC.network=="mainnet"){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => new Webview(link: "https://etherscan.io/tx/${wC.ethTransfers[index].hash}"),
+                          ),
+                        );
+                      }
                     },
                     child: Padding(
                         padding: const EdgeInsets.all(18.0),

@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 
+import '../webview.dart';
+
 class Erc20Transactionlist extends StatelessWidget {
   const Erc20Transactionlist({
     Key? key,
@@ -26,7 +28,23 @@ class Erc20Transactionlist extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: ListTile(
-                onTap: () async {},
+                onTap: () async {
+                  if(wC.network=="rinkeby"){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => new Webview(link: "https://rinkeby.etherscan.io/tx/${wC.erc20transfers[index].hash}"),
+                      ),
+                    );
+                  }else if(wC.network=="mainnet"){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => new Webview(link: "https://etherscan.io/tx/${wC.erc20transfers[index].hash}"),
+                      ),
+                    );
+                  }
+                },
                 trailing: Icon(
                   Ionicons.arrow_forward,
                   color:

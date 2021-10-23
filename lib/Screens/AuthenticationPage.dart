@@ -1,3 +1,7 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:clipboard/clipboard.dart';
+import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
+
 import 'Home/Home.dart';
 import 'Home/HomePage.dart';
 import 'package:ether_wallet_flutter_app/controllers/localAuthenticationController.dart';
@@ -18,10 +22,22 @@ class AuthenticationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final WalletController walletController = Get.put(WalletController());
+
     OneSignal.shared.setNotificationWillShowInForegroundHandler((OSNotificationReceivedEvent event){
       event.complete(event.notification);
-      print("Here: ");
-      print(event.notification.body);
+      FlutterClipboard.copy(event.notification.body.toString()).then((value) => {
+      AwesomeDialog(
+          padding: EdgeInsets.all(20),
+      context: context,
+      dialogType: DialogType.INFO,
+      animType: AnimType.BOTTOMSLIDE,
+      title: event.notification.title,
+      desc: event.notification.body.toString() + " has been copied to clipboard. You can paste it to etherscan.io to know more about your transaction."
+      )..show()
+      });
+      walletController.setUpEthAccount(ethAccount: walletController.activeAccount);//refreshes
+      walletController.getTokenTransactions(walletController.lastTransactionScreen);//refreshes
     });
 
     final authController = Get.put(LocalAuthController());

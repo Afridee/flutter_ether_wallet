@@ -29,6 +29,7 @@ import '../functions/createEthAccountAPI.dart';
 class WalletController extends GetxController {
 
   bool loading = false;
+  int lastTransactionScreen = -1;
 
   Box<String> eRC20TokenBox = Hive.box<String>('ERC20Tokens');
 
@@ -61,7 +62,7 @@ class WalletController extends GetxController {
   }
 
   getTokenTransactions(int contractIndex) async{
-
+    lastTransactionScreen = contractIndex;
     erc20transfers = [];
     update();
 
@@ -224,8 +225,8 @@ class WalletController extends GetxController {
         }
 
         oneSignalIds.forEach((oneSignalId) async{
-          var response = await createWebhookForAddressActivity(appId: dotenv.env['ALCHEMY_MAINNET_APP_ID'].toString(), playerId: oneSignalId.toString(), ethAddresses: [accountModel.address]);
-          var response2 = await createWebhookForAddressActivity(appId: dotenv.env['ALCHEMY_RINKEBY_APP_ID'].toString(), playerId: oneSignalId.toString(), ethAddresses: [accountModel.address]);
+          var response = await create_Webhook_ForMinedTransactionNotifications(appId: dotenv.env['ALCHEMY_MAINNET_APP_ID'].toString(), playerId: oneSignalId.toString(), ethAddresses: [accountModel.address]);
+          var response2 = await create_Webhook_ForMinedTransactionNotifications(appId: dotenv.env['ALCHEMY_RINKEBY_APP_ID'].toString(), playerId: oneSignalId.toString(), ethAddresses: [accountModel.address]);
         });
       }
 
@@ -287,8 +288,8 @@ class WalletController extends GetxController {
         }
 
         oneSignalIds.forEach((oneSignalId) async{
-          var response = await createWebhookForAddressActivity(appId: dotenv.env['ALCHEMY_MAINNET_APP_ID'].toString(), playerId: oneSignalId.toString(), ethAddresses: [accountModel.address]);
-          var response2 = await createWebhookForAddressActivity(appId: dotenv.env['ALCHEMY_RINKEBY_APP_ID'].toString(), playerId: oneSignalId.toString(), ethAddresses: [accountModel.address]);
+          var response = await create_Webhook_ForMinedTransactionNotifications(appId: dotenv.env['ALCHEMY_MAINNET_APP_ID'].toString(), playerId: oneSignalId.toString(), ethAddresses: [accountModel.address]);
+          var response2 = await create_Webhook_ForMinedTransactionNotifications(appId: dotenv.env['ALCHEMY_RINKEBY_APP_ID'].toString(), playerId: oneSignalId.toString(), ethAddresses: [accountModel.address]);
         });
       }
 
