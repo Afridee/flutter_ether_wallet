@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Center(
                       child: IconButton(
                         icon: Icon(
-                          Icons.add_circle,
+                          Icons.add_circle_rounded,
                           color: kPrimaryColor,
                         ),
                         iconSize: 70,

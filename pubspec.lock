@@ -443,6 +443,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.2.0"
+  simple_icons:
+    dependency: "direct main"
+    description:
+      name: simple_icons
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.19.0"
   sky_engine:
     dependency: transitive
     description: flutter

@@ -20,8 +20,11 @@ class _WebviewState extends State<Webview> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         centerTitle: true,
-        title: Text(widget.link.toString()),
+        title: Text(widget.link.toString(), style: TextStyle(
+          fontSize: 15
+        ),),
         backgroundColor: kPrimaryColor,
       ),
       body: Container(

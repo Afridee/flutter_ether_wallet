@@ -15,7 +15,8 @@ class hmPageTopPart extends StatelessWidget {
   hmPageTopPart({
     Key? key,
     required TextTheme textTheme,
-  }) : _textTheme = textTheme, super(key: key);
+  })  : _textTheme = textTheme,
+        super(key: key);
 
   final TextTheme _textTheme;
   final WalletController walletController = Get.put(WalletController());
@@ -32,7 +33,7 @@ class hmPageTopPart extends StatelessWidget {
           painter: RPSCustomPainter(),
         ),
         Container(
-          height: 280,
+          height: (MediaQuery.of(context).size.width * 0.8).toDouble(),
           width: double.infinity,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,17 +52,32 @@ class hmPageTopPart extends StatelessWidget {
                                   wC.activeAccount.length - 5,
                                   wC.activeAccount.length),
                           style: _textTheme.headline5!.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
+                              color: Colors.white, fontWeight: FontWeight.bold),
                         ),
-                        IconButton(onPressed: (){
-                          FlutterClipboard.copy("0x" + wC.activeAccount).then((value) => {
-                            snackBar(context: context, text: "Eth address copied", trailingIcon: Icon(Icons.copy,color: Colors.white), bgColor: kPrimaryColor, textColor: Colors.white, duration: 2)
-                          });
-                        }, icon: Icon(Icons.copy), color: Colors.white,),
-                        IconButton(onPressed: (){
-                          EthAddressQRCode(context, wC.activeAccount);
-                        }, icon: Icon(Icons.share), color: Colors.white,)
+                        IconButton(
+                          onPressed: () {
+                            FlutterClipboard.copy("0x" + wC.activeAccount)
+                                .then((value) => {
+                                      snackBar(
+                                          context: context,
+                                          text: "Eth address copied",
+                                          trailingIcon: Icon(Icons.copy,
+                                              color: Colors.white),
+                                          bgColor: kPrimaryColor,
+                                          textColor: Colors.white,
+                                          duration: 2)
+                                    });
+                          },
+                          icon: Icon(Icons.copy),
+                          color: Colors.white,
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            EthAddressQRCode(context, wC.activeAccount);
+                          },
+                          icon: Icon(Icons.share),
+                          color: Colors.white,
+                        )
                       ],
                     );
                   },
@@ -76,8 +92,7 @@ class hmPageTopPart extends StatelessWidget {
                       return Text(
                         wC.activeAccountEthBalance + ' ETH',
                         style: _textTheme.headline5!.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
+                            color: Colors.white, fontWeight: FontWeight.bold),
                       );
                     }),
                     IconButton(
@@ -86,7 +101,7 @@ class hmPageTopPart extends StatelessWidget {
                         CupertinoIcons.profile_circled,
                         color: Colors.white,
                       ),
-                      onPressed: (){
+                      onPressed: () {
                         bottomSheetOfEthAccounts(context);
                       },
                     )
@@ -107,39 +122,22 @@ class hmPageTopPart extends StatelessWidget {
                   },
                 ),
               ),
-              // Row(
-              //   children: [
-              //     IconButton(onPressed: (){}, icon: Icon(Ionicons.arrow_down)),
-              //     IconButton(onPressed: (){}, icon: Icon(Ionicons.arrow_forward)),
-              //     IconButton(onPressed: (){}, icon: Icon(Ionicons.swap_vertical))
-              //   ],
-              // ),
-              SizedBox(
-                height: 40,
-              ),
+              Spacer(),
               Align(
                 child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        IconButton(
-                          onPressed: () async {
-
-
-                          },
-                          icon: Icon(CupertinoIcons.arrow_swap, size: 30),
-                          color: Colors.white,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
                         Text(
                           'Tokens',
-                          style: _textTheme.headline6!
-                              .copyWith(color: Colors.white),
+                          style: _textTheme.headline6!.copyWith(color: Colors.white, fontSize: 22),
                         ),
+                        Icon(Icons.arrow_downward_rounded, color: Colors.white)
                       ],
-                    )),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),

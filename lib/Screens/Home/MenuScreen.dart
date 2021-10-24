@@ -1,5 +1,6 @@
 import 'package:ether_wallet_flutter_app/Screens/ApproveERC20token/ApproveERC20token.dart';
 import 'package:ether_wallet_flutter_app/controllers/loginController.dart';
+import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
 import 'package:ether_wallet_flutter_app/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -41,7 +42,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     height: 10,
                   ),
                   GetBuilder<LoginController>(builder: (lc){
-                    return Text(lc.userObj!["name"], style: GoogleFonts.poppins(fontStyle: FontStyle.normal, fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),);
+                    return Text(lc.userObj!["name"], style: GoogleFonts.poppins(fontStyle: FontStyle.normal, fontSize: 20, color: Colors.white),);
                   })
                 ],
               ),
@@ -59,14 +60,15 @@ class _MenuScreenState extends State<MenuScreen> {
                     );
                   },
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Icon(Icons.approval, color: Colors.white, size: 40),
+                      SizedBox(width: 30),
+                      Icon(Icons.approval, color: Colors.white, size: 30),
                       SizedBox(width: 20),
                       Text('Approove ERC20 Token',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 12
+                        fontSize: 15
                       ),)
                     ],
                   ),
@@ -75,7 +77,30 @@ class _MenuScreenState extends State<MenuScreen> {
             ),
             Divider(
               color: Colors.white,
-            )
+            ),
+            InkWell(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: InkWell(
+                  onTap: (){
+                     loginController.logOut();
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 30),
+                      Icon(Icons.logout, color: Colors.white, size: 30),
+                      SizedBox(width: 20),
+                      Text('Log Out',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15
+                        ),)
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

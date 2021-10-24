@@ -1,4 +1,5 @@
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:ionicons/ionicons.dart';
 
 import '../utils/constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,7 +30,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 24.0),
-          child: Icon(CupertinoIcons.qrcode),
+          child: Icon(Icons.explore),
         )
       ],
       backgroundColor: kPrimaryColor,

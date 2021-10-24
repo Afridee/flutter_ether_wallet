@@ -8,13 +8,17 @@ import 'package:get/get.dart';
 
 bottomSheetOfEthAccounts(BuildContext context){
   showModalBottomSheet(
+    backgroundColor: Colors.transparent,
       context: context,
       builder: (context) {
         return Column(
           children: [
             Expanded(
               child: Container(
-                color: kPrimaryColor,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30)),
+                  color: kPrimaryColor,
+                ),
                 child: GetBuilder<WalletController>(
                   builder: (wC){
                     return ListView.builder(

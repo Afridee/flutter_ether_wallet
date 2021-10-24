@@ -11,6 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:simple_icons/simple_icons.dart';
 import 'erc20TransactionList.dart';
 
 class TransactionScreen extends StatefulWidget {
@@ -46,7 +47,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Icon(
-                        Ionicons.ticket,
+                        SimpleIcons.ethereum,
                         color: Colors.white,
                         size: 70,
                       ),
@@ -85,7 +86,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                     );
                                   }
                                 },
-                                icon: Icon(Ionicons.send, color: kPrimaryColor),
+                                icon: Icon(Ionicons.arrow_forward_circle, color: kPrimaryColor),
                               ),
                             ),
                             Padding(
@@ -149,7 +150,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                      );
                                    }
                                 },
-                                icon: Icon(Ionicons.swap_vertical,
+                                icon: Icon(Ionicons.swap_horizontal,
                                     color: kPrimaryColor),
                               ),
                             ),

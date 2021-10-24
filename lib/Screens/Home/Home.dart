@@ -18,13 +18,13 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: ZoomDrawer(
         controller: drawerController,
-        style: DrawerStyle.DefaultStyle,
+        style: DrawerStyle.Style7,
         menuScreen: MenuScreen(),
         mainScreen: HomeScreen(drawerController: drawerController,),
         borderRadius: 24.0,
         showShadow: true,
         angle: -12.0,
-        backgroundColor: Colors.grey,
+        backgroundColor: Colors.white,
         slideWidth: MediaQuery.of(context).size.width*.65,
         openCurve: Curves.fastOutSlowIn,
         closeCurve: Curves.bounceIn,

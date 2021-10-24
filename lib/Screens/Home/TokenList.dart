@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:simple_icons/simple_icons.dart';
 
 import '../TokenTransactions/TransactionsScreen.dart';
 
@@ -48,7 +49,7 @@ class TokenList extends StatelessWidget {
             leading: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Icon(
-                Ionicons.ticket,
+                SimpleIcons.ethereum,
                 color: kPrimaryColor.withOpacity(0.5),
                 size: 35,
               ),
