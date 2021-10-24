@@ -12,7 +12,7 @@ Future<Map<String, dynamic>> approveErc20TokenForSwappingAPI(
       required String amountIn,
     }) async {
   final String baseUrl = dotenv.env['BASE_URL'].toString();
-  var url = Uri.parse(baseUrl + '/estimations/estimateGasForApprovingToken');
+  var url = Uri.parse(baseUrl + '/transactions/approveErc20TokenForSwapping');
 
   var response = await http.post(
     url,

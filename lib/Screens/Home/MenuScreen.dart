@@ -1,3 +1,4 @@
+import 'package:ether_wallet_flutter_app/Screens/ApproveERC20token/ApproveERC20token.dart';
 import 'package:ether_wallet_flutter_app/controllers/loginController.dart';
 import 'package:ether_wallet_flutter_app/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -48,17 +49,27 @@ class _MenuScreenState extends State<MenuScreen> {
             InkWell(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.approval, color: Colors.white, size: 40),
-                    SizedBox(width: 20),
-                    Text('Approove ERC20 Token',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12
-                    ),)
-                  ],
+                child: InkWell(
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => new ApproveERC20token(),
+                      ),
+                    );
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.approval, color: Colors.white, size: 40),
+                      SizedBox(width: 20),
+                      Text('Approove ERC20 Token',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12
+                      ),)
+                    ],
+                  ),
                 ),
               ),
             ),
