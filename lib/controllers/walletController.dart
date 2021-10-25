@@ -203,33 +203,6 @@ class WalletController extends GetxController {
       EncryptedEthAccountModel accountModel =
           EncryptedEthAccountModel.fromJson(account);
 
-      List<Datum> webhooks = await getAllWebhooks();
-
-      if (webhooks.length > 0) {
-        webhooks.forEach((webhook) {
-          List<String> addresses = webhook.addresses;
-          addresses.add(accountModel.address);
-          updateWebhookAddresses(webhook.id, addresses);
-        });
-      } else {
-        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-            .collection('Users/' +
-                fba.FirebaseAuth.instance.currentUser!.uid +
-                '/OneSignalIds')
-            .get();
-
-        List<String> oneSignalIds = [];
-
-        for (int i = 0; i < querySnapshot.docs.length; i++) {
-           oneSignalIds.add(querySnapshot.docs[i].get('data'));
-        }
-
-        oneSignalIds.forEach((oneSignalId) async{
-          var response = await create_Webhook_ForMinedTransactionNotifications(appId: dotenv.env['ALCHEMY_MAINNET_APP_ID'].toString(), playerId: oneSignalId.toString(), ethAddresses: [accountModel.address]);
-          var response2 = await create_Webhook_ForMinedTransactionNotifications(appId: dotenv.env['ALCHEMY_RINKEBY_APP_ID'].toString(), playerId: oneSignalId.toString(), ethAddresses: [accountModel.address]);
-        });
-      }
-
       loading = false;
       update();
 
@@ -265,33 +238,6 @@ class WalletController extends GetxController {
 
       EncryptedEthAccountModel accountModel =
       EncryptedEthAccountModel.fromJson(account);
-
-      List<Datum> webhooks = await getAllWebhooks();
-
-      if (webhooks.length > 0) {
-        webhooks.forEach((webhook) {
-          List<String> addresses = webhook.addresses;
-          addresses.add(accountModel.address);
-          updateWebhookAddresses(webhook.id, addresses);
-        });
-      } else {
-        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-            .collection('Users/' +
-            fba.FirebaseAuth.instance.currentUser!.uid +
-            '/OneSignalIds')
-            .get();
-
-        List<String> oneSignalIds = [];
-
-        for (int i = 0; i < querySnapshot.docs.length; i++) {
-          oneSignalIds.add(querySnapshot.docs[i].get('data'));
-        }
-
-        oneSignalIds.forEach((oneSignalId) async{
-          var response = await create_Webhook_ForMinedTransactionNotifications(appId: dotenv.env['ALCHEMY_MAINNET_APP_ID'].toString(), playerId: oneSignalId.toString(), ethAddresses: [accountModel.address]);
-          var response2 = await create_Webhook_ForMinedTransactionNotifications(appId: dotenv.env['ALCHEMY_RINKEBY_APP_ID'].toString(), playerId: oneSignalId.toString(), ethAddresses: [accountModel.address]);
-        });
-      }
 
       loading = false;
       update();

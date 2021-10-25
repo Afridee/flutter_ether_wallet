@@ -33,10 +33,6 @@ class Datum {
     required this.webhookUrl,
     required this.isActive,
     required this.timeCreated,
-    required this.addresses,
-    this.gasPriceLow,
-    this.gasPriceHigh,
-    this.gasPriceType,
   });
 
   int id;
@@ -46,10 +42,6 @@ class Datum {
   String webhookUrl;
   bool isActive;
   int timeCreated;
-  List<String> addresses;
-  dynamic gasPriceLow;
-  dynamic gasPriceHigh;
-  dynamic gasPriceType;
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
     id: json["id"],
@@ -59,10 +51,6 @@ class Datum {
     webhookUrl: json["webhook_url"],
     isActive: json["is_active"],
     timeCreated: json["time_created"],
-    addresses: List<String>.from(json["addresses"].map((x) => x)),
-    gasPriceLow: json["gas_price_low"],
-    gasPriceHigh: json["gas_price_high"],
-    gasPriceType: json["gas_price_type"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -73,9 +61,5 @@ class Datum {
     "webhook_url": webhookUrl,
     "is_active": isActive,
     "time_created": timeCreated,
-    "addresses": List<dynamic>.from(addresses.map((x) => x)),
-    "gas_price_low": gasPriceLow,
-    "gas_price_high": gasPriceHigh,
-    "gas_price_type": gasPriceType,
   };
 }

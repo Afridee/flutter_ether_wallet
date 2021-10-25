@@ -9,6 +9,7 @@ import 'package:ether_wallet_flutter_app/utils/constants.dart';
 import 'package:ether_wallet_flutter_app/widgets/EthAddressQRCode.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:simple_icons/simple_icons.dart';
@@ -30,8 +31,14 @@ class TransactionScreen extends StatefulWidget {
 }
 
 class _TransactionScreenState extends State<TransactionScreen> {
+
   @override
   Widget build(BuildContext context){
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+
     return Scaffold(
       backgroundColor: kPrimaryColor,
       body: Container(
@@ -44,6 +51,16 @@ class _TransactionScreenState extends State<TransactionScreen> {
                 child: Column(
                   children: [
                     Spacer(),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          iconSize: 40,
+                          icon: Icon(Icons.arrow_back_rounded),
+                          color: Colors.white),
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Icon(

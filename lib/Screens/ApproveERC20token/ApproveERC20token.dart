@@ -85,7 +85,7 @@ class _ApproveERC20tokenState extends State<ApproveERC20token> {
                   Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Text(
-                      "Send ether to another account from currently active account.",
+                      "Approve an erc20 token before swapping.",
                       style: TextStyle(fontSize: 15),
                     ),
                   ),

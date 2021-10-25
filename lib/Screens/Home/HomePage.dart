@@ -37,49 +37,52 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     TextTheme _textTheme = Theme.of(context).textTheme;
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: CustomAppBar(
-        textTheme: _textTheme,
-        title: '',
-        drawerController: widget.drawerController,
-      ),
-      body: GetBuilder<WalletController>(
-        builder: (wC){
-          return ModalProgressHUD(
-            color: Colors.white,
-            progressIndicator: CircularProgressIndicator(
-              color: kPrimaryColor,
-            ),
-            inAsyncCall: wC.loading,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  hmPageTopPart(textTheme: _textTheme),
-                  Container(
-                    height: 260,
-                    child: TokenList(textTheme: _textTheme),
-                  ),
-                  Container(
-                    child: Center(
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.add_circle_rounded,
-                          color: kPrimaryColor,
-                        ),
-                        iconSize: 70,
-                        color: Colors.white,
-                        onPressed: () {
-                          addTokenDialog(context: context, title: "Enter ERC20 token address", color: kPrimaryColor);
-                        },
-                      ),
-                    ),
-                  )
-                ],
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: CustomAppBar(
+          textTheme: _textTheme,
+          title: '',
+          drawerController: widget.drawerController,
+        ),
+        body: GetBuilder<WalletController>(
+          builder: (wC){
+            return ModalProgressHUD(
+              color: Colors.white,
+              progressIndicator: CircularProgressIndicator(
+                color: kPrimaryColor,
               ),
-            ),
-          );
-        },
+              inAsyncCall: wC.loading,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    hmPageTopPart(textTheme: _textTheme),
+                    Container(
+                      height: 260,
+                      child: TokenList(textTheme: _textTheme),
+                    ),
+                    Container(
+                      child: Center(
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.add_circle_rounded,
+                            color: kPrimaryColor,
+                          ),
+                          iconSize: 70,
+                          color: Colors.white,
+                          onPressed: () {
+                            addTokenDialog(context: context, title: "Enter ERC20 token address", color: kPrimaryColor);
+                          },
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../webview.dart';
+
 class MenuScreen extends StatefulWidget {
   @override
   _MenuScreenState createState() => _MenuScreenState();
@@ -70,6 +72,37 @@ class _MenuScreenState extends State<MenuScreen> {
                         color: Colors.white,
                         fontSize: 15
                       ),)
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Divider(
+              color: Colors.white,
+            ),
+            InkWell(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: InkWell(
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => new Webview(link: "https://etherscan.io"),
+                      ),
+                    );
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 30),
+                      Icon(Icons.web, color: Colors.white, size: 30),
+                      SizedBox(width: 20),
+                      Text('Visit etherscan.io',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15
+                        ),)
                     ],
                   ),
                 ),
