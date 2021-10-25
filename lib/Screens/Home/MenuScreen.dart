@@ -5,6 +5,7 @@ import 'package:ether_wallet_flutter_app/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ionicons/ionicons.dart';
 
 import '../webview.dart';
 
@@ -99,6 +100,37 @@ class _MenuScreenState extends State<MenuScreen> {
                       Icon(Icons.web, color: Colors.white, size: 30),
                       SizedBox(width: 20),
                       Text('Visit etherscan.io',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15
+                        ),)
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Divider(
+              color: Colors.white,
+            ),
+            InkWell(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: InkWell(
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => new Webview(link: "https://ethereum.org/en/get-eth/"),
+                      ),
+                    );
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 30),
+                      Icon(Ionicons.bag_add, color: Colors.white, size: 30),
+                      SizedBox(width: 20),
+                      Text('Buy Ether',
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 15
