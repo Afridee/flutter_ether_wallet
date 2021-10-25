@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 Future<Map> create_Webhook_ForMinedTransactionNotifications(
     {required String appId,
     required String playerId,
+      required String userId,
     }) async {
   var url = Uri.parse('https://dashboard.alchemyapi.io/api/create-webhook');
   final String baseUrl = dotenv.env['BASE_URL'].toString();
@@ -17,7 +18,7 @@ Future<Map> create_Webhook_ForMinedTransactionNotifications(
       body: jsonEncode({
         "app_id": appId,
         "webhook_type": 2,
-        "webhook_url": "$baseUrl/notifications/sendNotificationsForAddressActivity/$playerId",
+        "webhook_url": "$baseUrl/notifications/sendNotificationsForAddressActivity/$userId/$playerId",
       }));
 
   Map responsBod = jsonDecode(response.body);

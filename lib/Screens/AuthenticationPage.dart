@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
@@ -36,8 +38,10 @@ class AuthenticationPage extends StatelessWidget {
       desc: event.notification.body.toString() + " has been copied to clipboard. You can paste it to etherscan.io to know more about your transaction."
       )..show()
       });
-      walletController.setUpEthAccount(ethAccount: walletController.activeAccount);//refreshes
-      walletController.getTokenTransactions(walletController.lastTransactionScreen);//refreshes
+      Timer(Duration(seconds: 5), (){
+        walletController.setUpEthAccount(ethAccount: walletController.activeAccount);//refreshes
+        walletController.getTokenTransactions(walletController.lastTransactionScreen);//refreshes
+      });
     });
 
     final authController = Get.put(LocalAuthController());

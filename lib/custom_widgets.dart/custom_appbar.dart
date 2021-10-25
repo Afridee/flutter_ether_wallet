@@ -1,3 +1,4 @@
+import 'package:ether_wallet_flutter_app/widgets/networks.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:ionicons/ionicons.dart';
 
@@ -6,12 +7,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-
   final TextTheme textTheme;
   final String title;
   final ZoomDrawerController drawerController;
 
-  const CustomAppBar({Key? key, required this.textTheme, required this.title, required this.drawerController}) : super(key: key);
+  const CustomAppBar(
+      {Key? key,
+      required this.textTheme,
+      required this.title,
+      required this.drawerController})
+      : super(key: key);
   @override
   Size get preferredSize => const Size.fromHeight(70);
 
@@ -30,7 +35,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 24.0),
-          child: Icon(Icons.explore),
+          child: InkWell(
+            onTap: (){
+              Networks(context);
+            },
+            child: Icon(Icons.explore),
+          ),
         )
       ],
       backgroundColor: kPrimaryColor,

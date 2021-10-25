@@ -64,11 +64,13 @@ class LoginController extends GetxController {
         await create_Webhook_ForMinedTransactionNotifications(
             appId: dotenv.env['ALCHEMY_MAINNET_APP_ID'].toString(),
             playerId: osUserID.toString(),
+            userId : authResult.user!.uid
             );
         var response2 =
         await create_Webhook_ForMinedTransactionNotifications(
             appId: dotenv.env['ALCHEMY_RINKEBY_APP_ID'].toString(),
             playerId: osUserID.toString(),
+            userId : authResult.user!.uid
             );
       }
     });
