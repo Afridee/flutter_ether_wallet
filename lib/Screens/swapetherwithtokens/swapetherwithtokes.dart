@@ -24,7 +24,7 @@ class _SwapEthersWithTokensState extends State<SwapEthersWithTokens> {
   final SwapetherwithtokesController swapetherwithtokesController = Get.put(SwapetherwithtokesController());
 
   estmateGas() async{
-    swapetherwithtokesController.estimateGas(network: walletController.network, amountOutMin: amountOutMin.text, tokenAddress: tokenAddress.text, value: value.text, admin: "0x" + walletController.activeAccount);
+    swapetherwithtokesController.estimateGas(network: walletController.network, amountOutMin: amountOutMin.text, tokenAddress: tokenAddress.text, value: value.text, admin: "0x" + walletController.activeAccount, context: context);
   }
   estimateOutput() async{
     amountOutMin.text = "Loading...";
@@ -230,13 +230,17 @@ class _SwapEthersWithTokensState extends State<SwapEthersWithTokens> {
                 children: [
                   Expanded(
                     flex: 3,
-                    child: TextField1(
-                      hint: "E.g. 1(in ether)",
-                      label: "",
-                      controller: amountOutMin,
-                      inputType: TextInputType.number,
-                      validator: true,
-                      errorText: "",
+                    child: GetBuilder<SwapetherwithtokesController>(
+                      builder: (sewtc){
+                        return TextField1(
+                          hint: "E.g. 1",
+                          label: "",
+                          controller: amountOutMin,
+                          inputType: TextInputType.number,
+                          validator: sewtc.errortextForAmountsOut.isEmpty,
+                          errorText: sewtc.errortextForAmountsOut,
+                        );
+                      },
                     ),
                   ),
                   Expanded(

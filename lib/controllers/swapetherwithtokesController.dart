@@ -14,6 +14,7 @@ class SwapetherwithtokesController extends GetxController {
   bool allowButtonPress = true;
   String estimatedamountsOut = "Calculating.. ";
   String tokenName = "...";
+  String errortextForAmountsOut = "";
 
   reset(){
     estimatedGasNeeded = 0;
@@ -112,11 +113,21 @@ class SwapetherwithtokesController extends GetxController {
     required String tokenAddress,
     required String value,
     required String admin,
+    required BuildContext context
   }) async{
+     print("ran...");
      if(amountOutMin.isNotEmpty && tokenAddress.isNotEmpty && value.isNotEmpty && admin.isNotEmpty){
        Map<String, dynamic> m = await estimateGasForSwappingEtherAPI(network: network, amountOutMin: amountOutMin, tokenAddress: tokenAddress, value: value, admin: admin);
        if(m["error"]==null){
          estimatedGasNeeded = m["estimatedGasNeeded"];
+         errortextForAmountsOut = "";
+         update();
+       }else{
+         print(m["error"]);
+         ///todo: put something else instead of a dialogue... (._.)
+         if(m["error"] == '{"error":"Returned error: execution reverted: UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT"}'){
+           errortextForAmountsOut = "Please reduce the output amount";
+         }
          update();
        }
      }
