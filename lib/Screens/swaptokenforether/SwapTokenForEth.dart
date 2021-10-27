@@ -36,7 +36,7 @@ class _SwapTokenForEthState extends State<SwapTokenForEth> {
       walletController.eRC20TokenBox.getAt(widget.tokenIndex - 1) ?? '',
       toContractAddress: "0xc778417e063141139fce010982780140aa0cd5ab",//weth address
     );
-    await swapTokenWithEtherController.estimateGasForSwappingTokenWithEther(///todo: gotta write a new api for this....
+    await swapTokenWithEtherController.estimateGasForSwappingTokenWithEther(
         showDialogue: false,
         network: walletController.network,
         fromContractAddress: walletController.eRC20TokenBox.getAt(widget.tokenIndex - 1) ?? '',
@@ -313,7 +313,7 @@ class _SwapTokenForEthState extends State<SwapTokenForEth> {
                 onTap: () {
                   if(swapTokenWithEtherController.allowButtonPress){
                     //checks if the token is approved:
-                    swapTokenWithEtherController.estimateGasForSwappingTokenWithEther(///todo: gotta write a new api for this....
+                    swapTokenWithEtherController.estimateGasForSwappingTokenWithEther(
                         showDialogue: true,
                         network: walletController.network,
                         fromContractAddress: walletController.eRC20TokenBox.getAt(widget.tokenIndex - 1) ?? '',
