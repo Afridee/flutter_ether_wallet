@@ -23,7 +23,7 @@ class AuthenticationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    int timeincreaser = 1;
     final WalletController walletController = Get.put(WalletController());
 
     OneSignal.shared.setNotificationWillShowInForegroundHandler((OSNotificationReceivedEvent event){
@@ -38,9 +38,10 @@ class AuthenticationPage extends StatelessWidget {
       desc: event.notification.body.toString() + " has been copied to clipboard. You can paste it to etherscan.io to know more about your transaction."
       )..show()
       });
-      Timer(Duration(seconds: 5), (){
+      Timer(Duration(seconds: 5*timeincreaser), (){
         walletController.setUpEthAccount(ethAccount: walletController.activeAccount);//refreshes
         walletController.getTokenTransactions(walletController.lastTransactionScreen);//refreshes
+        timeincreaser++;
       });
     });
 
