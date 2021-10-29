@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-
+import 'dart:ui' as ui;
 import 'constants.dart';
 
 class RPSCustomPainter extends CustomPainter{
@@ -10,8 +10,16 @@ class RPSCustomPainter extends CustomPainter{
 
 
     Paint paint_0 = new Paint()
-      ..color = kPrimaryColor
+
       ..style = PaintingStyle.fill
+      ..shader = ui.Gradient.linear(
+        Offset(0.0,0.0),
+        Offset(0.0,size.height*0.8250000),
+        [
+          kPrimaryColor,
+          kPrimaryColor2,
+        ],
+      )
       ..strokeWidth = 1;
 
 

@@ -50,7 +50,7 @@ class TokenList extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Icon(
                 SimpleIcons.ethereum,
-                color: kPrimaryColor.withOpacity(0.5),
+                color: kPrimaryColor2,
                 size: 35,
               ),
             ),

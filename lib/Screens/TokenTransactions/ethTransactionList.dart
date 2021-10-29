@@ -5,8 +5,10 @@ import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
 import 'package:ether_wallet_flutter_app/functions/DecodeInputDataAPI.dart';
 import 'package:ether_wallet_flutter_app/functions/TimestampToDateTime.dart';
 import 'package:ether_wallet_flutter_app/functions/getABI.dart';
+import 'package:ether_wallet_flutter_app/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 
@@ -168,7 +170,15 @@ class EthTransactionlist extends StatelessWidget {
                                           ),
                                         );
                                       }else{
-                                        return Center(child: CircularProgressIndicator());
+                                        return SpinKitThreeBounce(
+                                          itemBuilder: (BuildContext context, int index) {
+                                            return DecoratedBox(
+                                              decoration: BoxDecoration(
+                                                color: kPrimaryColor2,
+                                              ),
+                                            );
+                                          },
+                                        );
                                       }
                                   },
                                 ),

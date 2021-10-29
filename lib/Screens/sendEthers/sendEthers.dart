@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:ether_wallet_flutter_app/Screens/ScanQRcode/ScanQrcode.dart';
 import 'package:ether_wallet_flutter_app/controllers/sendEthController.dart';
 import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
 import 'package:ether_wallet_flutter_app/functions/estimateGasPriceAPI.dart';
@@ -108,24 +109,37 @@ class _SendEthersState extends State<SendEthers> {
               child: Center(
                 child: Center(
                   child: Text(
-                    "Contract Address of the Receiver : ",
+                    "Address of the Receiver : ",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                 ),
               ),
             ),
-            Container(
-              padding: EdgeInsets.all(10),
-              width: MediaQuery.of(context).size.width,
-              child: TextField1(
-                hint: "E.g. 0xc7..Ab",
-                label: "",
-                controller: toAddress,
-                inputType: TextInputType.text,
-                errorText: "Contract Address should be 42 characters long",
-                validator: toAddress.text.length == 42,
-              ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(10),
+                  width: MediaQuery.of(context).size.width-50,
+                  child: TextField1(
+                    hint: "E.g. 0xc7..Ab",
+                    label: "",
+                    controller: toAddress,
+                    inputType: TextInputType.text,
+                    errorText: "Contract Address should be 42 characters long",
+                    validator: toAddress.text.length == 42,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: InkWell(onTap: (){
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => QRViewExample(text: toAddress),
+                    ));
+                  },child: Icon(Icons.qr_code_scanner, size: 30, color: kPrimaryColor)),
+                )
+              ],
             ),
             Divider(),
             Container(

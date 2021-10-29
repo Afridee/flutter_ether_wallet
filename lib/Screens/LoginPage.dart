@@ -32,6 +32,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: Text("Login with facebook"),
                 onPressed: (){
                   loginController.loginWithFb();
+                  //loginController.loginWithEmail(email: "a.afridee47@gmail.com", password: "bakabaka");
                 },
               ))
           );

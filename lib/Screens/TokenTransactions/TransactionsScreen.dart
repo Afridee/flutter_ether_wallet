@@ -40,14 +40,20 @@ class _TransactionScreenState extends State<TransactionScreen> {
     ]);
 
     return Scaffold(
-      backgroundColor: kPrimaryColor,
       body: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                colors: [kPrimaryColor, kPrimaryColor2])
+        ),
         child: Column(
           children: [
             Expanded(
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                color: kPrimaryColor,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        colors: [kPrimaryColor, kPrimaryColor2])
+                ),
                 child: Column(
                   children: [
                     Spacer(),

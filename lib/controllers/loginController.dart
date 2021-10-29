@@ -48,6 +48,43 @@ class LoginController extends GetxController {
     }
   }
 
+  loginWithEmail({required String email, required String password}) async {
+    final fba.UserCredential authResult;
+
+    authResult = await fba.FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+
+    isLoggedIn = fba.FirebaseAuth.instance.currentUser != null;
+    update();
+
+    if(isLoggedIn){
+      userObj = {
+        "name" : authResult.user!.email,
+        "picture" : {
+          "data" : {
+            "url" : "https://firebasestorage.googleapis.com/v0/b/ether-wallet-56723.appspot.com/o/profile.png?alt=media&token=8d98c998-6949-476d-ba7f-5ff00a8f8343"
+          }
+        }
+      };
+
+      final CollectionReference users =
+      FirebaseFirestore.instance.collection('Users');
+      users.doc(authResult.user!.uid).set({
+        "name" : authResult.user!.email,
+        "picture" : {
+          "data" : {
+            "url" : "https://firebasestorage.googleapis.com/v0/b/ether-wallet-56723.appspot.com/o/profile.png?alt=media&token=8d98c998-6949-476d-ba7f-5ff00a8f8343"
+          }
+        }
+      });
+
+      Map<dynamic, dynamic>? userObjTemp = userObj;
+
+      userObjBox.put("userObj", userObjTemp ?? {});
+
+      afterLogin(authResult);
+    }
+  }
+
   afterLogin(fba.UserCredential authResult) async{
 
     final status = await OneSignal.shared.getDeviceState();

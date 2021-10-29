@@ -1,5 +1,6 @@
 import 'package:ether_wallet_flutter_app/Screens/Home/TokenList.dart';
 import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import '../../widgets/AddTokenDialogue.dart';
 import 'package:get/get.dart';
@@ -50,8 +51,15 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (wC){
             return ModalProgressHUD(
               color: Colors.white,
-              progressIndicator: CircularProgressIndicator(
-                color: kPrimaryColor,
+              opacity: 1,
+              progressIndicator: SpinKitThreeBounce(
+                itemBuilder: (BuildContext context, int index) {
+                  return DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: kPrimaryColor2,
+                    ),
+                  );
+                },
               ),
               inAsyncCall: wC.loading,
               child: SingleChildScrollView(
@@ -67,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: IconButton(
                           icon: Icon(
                             Icons.add_circle_rounded,
-                            color: kPrimaryColor,
+                            color: kPrimaryColor2,
                           ),
                           iconSize: 70,
                           color: Colors.white,
