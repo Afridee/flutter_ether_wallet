@@ -359,9 +359,7 @@ class _SwapTokenForTokenState extends State<SwapTokenForToken> {
                     swapTokenForTokenController.estimateGasForSwappingToken(
                         showDialogue: true,
                         network: walletController.network,
-                        fromContractAddress: walletController.eRC20TokenBox
-                                .getAt(widget.tokenIndex - 1) ??
-                            '',
+                        fromContractAddress: walletController.eRC20TokenBox.getAt(widget.tokenIndex - 1) ?? '',
                         toContractAddress: toContractAddress.text,
                         from: "0x" + walletController.activeAccount,
                         amountIn: amountIn.text,

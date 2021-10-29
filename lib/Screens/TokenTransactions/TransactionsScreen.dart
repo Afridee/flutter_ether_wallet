@@ -1,6 +1,6 @@
 import 'package:ether_wallet_flutter_app/Screens/TokenTransactions/ethTransactionList.dart';
 import 'package:ether_wallet_flutter_app/Screens/sendEthers/sendEthers.dart';
-import 'package:ether_wallet_flutter_app/Screens/sendTokens/sendTokens.dart';
+import 'package:ether_wallet_flutter_app/Screens/sendTokens/sendERC20Tokens.dart';
 import 'package:ether_wallet_flutter_app/Screens/swapetherwithtokens/swapetherwithtokes.dart';
 import 'package:ether_wallet_flutter_app/Screens/swaptokenfortoken/SwapTokenForTokenPage.dart';
 import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
@@ -91,7 +91,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => new SendTokens(),
+                                        builder: (context) => new SendERC20Tokens(tokenIndex: widget.tokenIndex, tokenSymbol: widget.token.tokenSymbol),
                                       ),
                                     );
                                   }else{//token is ether then...
