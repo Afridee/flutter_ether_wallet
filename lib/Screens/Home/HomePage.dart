@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ether_wallet_flutter_app/Screens/Home/TokenList.dart';
 import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -30,6 +33,27 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     walletController.getEthAccounts();
+    Timer(Duration(seconds: 5), (){
+      if(walletController.ethAccounts.isEmpty){
+        AwesomeDialog(
+            context: context,
+            dialogType: DialogType.INFO_REVERSED,
+            animType: AnimType.BOTTOMSLIDE,
+            body: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Press"),
+                SizedBox(width: 5),
+                Icon(CupertinoIcons.profile_circled),
+                SizedBox(width: 5),
+                Text("to create/import eth accounts")
+              ],
+            ),
+            btnOkOnPress: () {},
+            btnOkColor: kPrimaryColor2)
+          ..show();
+      }
+    });
     final _drawerController = ZoomDrawerController();
     super.initState();
   }

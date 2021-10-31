@@ -12,8 +12,7 @@ import 'package:numberpicker/numberpicker.dart';
 class SwapTokenForEth extends StatefulWidget {
   final int tokenIndex;
 
-  const SwapTokenForEth({Key? key, required this.tokenIndex})
-      : super(key: key);
+  const SwapTokenForEth({Key? key, required this.tokenIndex}) : super(key: key);
 
   @override
   _SwapTokenForEthState createState() => _SwapTokenForEthState();
@@ -22,7 +21,7 @@ class SwapTokenForEth extends StatefulWidget {
 class _SwapTokenForEthState extends State<SwapTokenForEth> {
   final WalletController walletController = Get.put(WalletController());
   final SwapTokenWithEtherController swapTokenWithEtherController =
-  Get.put(SwapTokenWithEtherController());
+      Get.put(SwapTokenWithEtherController());
   Box<String> eRC20TokenBox = Hive.box<String>('ERC20Tokens');
   TextEditingController amountIn = new TextEditingController();
   TextEditingController privateKey = new TextEditingController();
@@ -33,13 +32,15 @@ class _SwapTokenForEthState extends State<SwapTokenForEth> {
       network: walletController.network,
       amountIn: amountIn.text,
       fromContractAddress:
-      walletController.eRC20TokenBox.getAt(widget.tokenIndex - 1) ?? '',
-      toContractAddress: "0xc778417e063141139fce010982780140aa0cd5ab",//weth address
+          walletController.eRC20TokenBox.getAt(widget.tokenIndex - 1) ?? '',
+      toContractAddress:
+          "0xc778417e063141139fce010982780140aa0cd5ab", //weth address
     );
     await swapTokenWithEtherController.estimateGasForSwappingTokenWithEther(
         showDialogue: false,
         network: walletController.network,
-        fromContractAddress: walletController.eRC20TokenBox.getAt(widget.tokenIndex - 1) ?? '',
+        fromContractAddress:
+            walletController.eRC20TokenBox.getAt(widget.tokenIndex - 1) ?? '',
         address: "0x" + walletController.activeAccount,
         amountIn: amountIn.text,
         context: context);
@@ -72,7 +73,11 @@ class _SwapTokenForEthState extends State<SwapTokenForEth> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              color: kPrimaryColor.withOpacity(0.2),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [kPrimaryColor, kPrimaryColor2],
+                ),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -85,7 +90,7 @@ class _SwapTokenForEthState extends State<SwapTokenForEth> {
                       },
                       iconSize: 40,
                       icon: Icon(Icons.arrow_back_rounded),
-                      color: Colors.black),
+                      color: Colors.white),
                   SizedBox(
                     height: 30,
                   ),
@@ -93,14 +98,14 @@ class _SwapTokenForEthState extends State<SwapTokenForEth> {
                     padding: const EdgeInsets.only(left: 15.0),
                     child: Text(
                       "Swap exact tokens for eth.",
-                      style: TextStyle(fontSize: 25),
+                      style: TextStyle(fontSize: 25, color: Colors.white),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Text(
                       "This functionality uses Uniswap's 'swapExactTokensForETH' function to swap tokens for eth.",
-                      style: TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: 15, color: Colors.white),
                     ),
                   ),
                   SizedBox(
@@ -122,9 +127,10 @@ class _SwapTokenForEthState extends State<SwapTokenForEth> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.only(left: 25, right: 25, top: 15),
               width: MediaQuery.of(context).size.width,
               child: TextField1(
+                obsucureText: false,
                 hint: "E.g. c7..Ab",
                 label: "",
                 controller: privateKey,
@@ -147,9 +153,10 @@ class _SwapTokenForEthState extends State<SwapTokenForEth> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.only(left: 25, right: 25, top: 15),
               width: MediaQuery.of(context).size.width,
               child: TextField1(
+                obsucureText: false,
                 hint: "E.g. 0.2",
                 label: "",
                 controller: amountIn,
@@ -174,14 +181,11 @@ class _SwapTokenForEthState extends State<SwapTokenForEth> {
               padding: EdgeInsets.all(10),
               width: MediaQuery.of(context).size.width,
               child: GetBuilder<SwapTokenWithEtherController>(
-                builder: (STFTC){
+                builder: (STFTC) {
                   return Center(
                     child: Text(
                       "${STFTC.estimatedGasNeeded}",
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: kPrimaryColor
-                      ),
+                      style: TextStyle(fontSize: 16, color: kPrimaryColor),
                     ),
                   );
                 },
@@ -200,13 +204,14 @@ class _SwapTokenForEthState extends State<SwapTokenForEth> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(15),
+              padding: EdgeInsets.only(left: 25, right: 25, top: 15),
               width: MediaQuery.of(context).size.width,
               child: Row(
                 children: [
                   Expanded(
-                    flex: 3,
+                    flex: 2,
                     child: TextField1(
+                      obsucureText: false,
                       hint: "E.g. 1.000000009(in gwei)",
                       label: "",
                       controller: gasPrice,
@@ -217,25 +222,25 @@ class _SwapTokenForEthState extends State<SwapTokenForEth> {
                   ),
                   Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 8.0, bottom: 20.0),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: kPrimaryColor,
-                            onPrimary: Colors.white,
-                            onSurface: Colors.grey,
-                          ),
-                          onPressed: () async {
-                            gasPrice.text = ".........";
-                            Map<String, dynamic> m = await estimateGasPriceAPI(
-                                network: walletController.network);
-                            gasPrice.text = (m["GasPrice"] ?? "").toString();
-                          },
-                          child: Text(
-                            "Estimate",
-                            style: TextStyle(fontSize: 10),
-                          ),
-                        ),
-                      ))
+                    padding: const EdgeInsets.only(left: 8.0, bottom: 30.0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: kPrimaryColor2,
+                        onPrimary: Colors.white,
+                        onSurface: Colors.grey,
+                      ),
+                      onPressed: () async {
+                        gasPrice.text = ".........";
+                        Map<String, dynamic> m = await estimateGasPriceAPI(
+                            network: walletController.network);
+                        gasPrice.text = (m["GasPrice"] ?? "").toString();
+                      },
+                      child: Text(
+                        "Estimate",
+                        style: TextStyle(fontSize: 10),
+                      ),
+                    ),
+                  ))
                 ],
               ),
             ),
@@ -302,7 +307,7 @@ class _SwapTokenForEthState extends State<SwapTokenForEth> {
                   ],
                 ),
                 decoration: BoxDecoration(
-                    color: kPrimaryColor.withOpacity(0.5),
+                    color: kPrimaryColor2.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(20)),
               ),
             ),
@@ -311,21 +316,30 @@ class _SwapTokenForEthState extends State<SwapTokenForEth> {
               padding: const EdgeInsets.all(25.0),
               child: InkWell(
                 onTap: () {
-                  if(swapTokenWithEtherController.allowButtonPress){
+                  if (swapTokenWithEtherController.allowButtonPress) {
                     //checks if the token is approved:
-                    swapTokenWithEtherController.estimateGasForSwappingTokenWithEther(
-                        showDialogue: true,
-                        network: walletController.network,
-                        fromContractAddress: walletController.eRC20TokenBox.getAt(widget.tokenIndex - 1) ?? '',
-                        address: "0x" + walletController.activeAccount,
-                        amountIn: amountIn.text,
-                        context: context);
+                    swapTokenWithEtherController
+                        .estimateGasForSwappingTokenWithEther(
+                            showDialogue: true,
+                            network: walletController.network,
+                            fromContractAddress: walletController.eRC20TokenBox
+                                    .getAt(widget.tokenIndex - 1) ??
+                                '',
+                            address: "0x" + walletController.activeAccount,
+                            amountIn: amountIn.text,
+                            context: context);
                     //Makes the swap:
-                    try{
-                      swapTokenWithEtherController.swapTokenWithEther(context: context, network: walletController.network, fromContractAddress: walletController.eRC20TokenBox
-                          .getAt(widget.tokenIndex - 1) ??
-                          '', amountIn: double.parse(amountIn.text), privateKey: privateKey.text, gasPrice: double.parse(gasPrice.text));
-                    }catch(error){
+                    try {
+                      swapTokenWithEtherController.swapTokenWithEther(
+                          context: context,
+                          network: walletController.network,
+                          fromContractAddress: walletController.eRC20TokenBox
+                                  .getAt(widget.tokenIndex - 1) ??
+                              '',
+                          amountIn: double.parse(amountIn.text),
+                          privateKey: privateKey.text,
+                          gasPrice: double.parse(gasPrice.text));
+                    } catch (error) {
                       AwesomeDialog(
                           context: context,
                           dialogType: DialogType.ERROR,
@@ -333,21 +347,24 @@ class _SwapTokenForEthState extends State<SwapTokenForEth> {
                           title: 'Oops!',
                           desc: error.toString(),
                           btnOkOnPress: () {},
-                          btnOkColor: kPrimaryColor
-                      )..show();
+                          btnOkColor: kPrimaryColor)
+                        ..show();
                     }
                   }
                 },
                 child: GetBuilder<SwapTokenWithEtherController>(
-                  builder: (stftc){
+                  builder: (stftc) {
                     return Container(
                       height: 50,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: kPrimaryColor),
+                        borderRadius: BorderRadius.circular(30),
+                        gradient: LinearGradient(
+                          colors: [kPrimaryColor, kPrimaryColor2],
+                        ),
+                      ),
                       child: Center(
                         child: Text(
-                          stftc.allowButtonPress?  "Swap" : "Processing...",
+                          stftc.allowButtonPress ? "Swap" : "Processing...",
                           style: TextStyle(color: Colors.white),
                         ),
                       ),

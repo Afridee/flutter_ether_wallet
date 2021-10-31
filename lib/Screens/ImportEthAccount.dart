@@ -39,7 +39,11 @@ class _ImportEthAccountScreenState extends State<ImportEthAccountScreen> {
                   flex: 3,
                   child: Container(
                     width: MediaQuery.of(context).size.width,
-                    color: kPrimaryColor.withOpacity(0.2),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [kPrimaryColor, kPrimaryColor2],
+                      ),
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.only(left: 20, right: 20),
                       child: Column(
@@ -52,16 +56,16 @@ class _ImportEthAccountScreenState extends State<ImportEthAccountScreen> {
                               },
                               iconSize: 40,
                               icon: Icon(Icons.arrow_back_rounded),
-                              color: Colors.black),
+                              color: Colors.white),
                           Spacer(),
                           Text(
                             "Import an existing eth account.",
-                            style: TextStyle(fontSize: 25),
+                            style: TextStyle(fontSize: 25, color: Colors.white),
                           ),
                           Spacer(),
                           Text(
                             "Please note that the account will be encrypted and saved in our database, So that you can retrieve the private key with your given password whenever you like.",
-                            style: TextStyle(fontSize: 15),
+                            style: TextStyle(fontSize: 15, color: Colors.white),
                           ),
                           Spacer(),
                         ],
@@ -169,15 +173,12 @@ class _ImportEthAccountScreenState extends State<ImportEthAccountScreen> {
                         child: Text('Import\nAccount'),
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.all(35),
-                          primary: kPrimaryColor,
+                          primary: kPrimaryColor2,
                           onPrimary: Colors.white,
                           onSurface: Colors.grey,
                           shape: const CircleBorder(),
                         ),
                         onPressed: () {
-                          // print("Private Key : " + privateKey.text);
-                          // print("password : " + password.text);
-                          // print("reEnteredpassword : " + reEnteredpassword.text);
                           if(password.text.isNotEmpty && password.text==reEnteredpassword.text && privateKey.text.length==64){
                             walletController.importAEthAccount(password: password.text, context: context, privateKey: privateKey.text);
                           }

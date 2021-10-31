@@ -17,7 +17,7 @@ bottomSheetOfEthAccounts(BuildContext context){
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30)),
-                  color: kPrimaryColor,
+                  color: kPrimaryColor2,
                 ),
                 child: GetBuilder<WalletController>(
                   builder: (wC){
@@ -57,7 +57,7 @@ bottomSheetOfEthAccounts(BuildContext context){
             Container(
               height: 90,
               width: MediaQuery.of(context).size.width,
-              color: kPrimaryColor,
+              color: kPrimaryColor2,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [

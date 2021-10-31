@@ -9,11 +9,12 @@ import 'package:ether_wallet_flutter_app/widgets/TextField1.dart';
 import 'package:get/get.dart';
 
 class SendERC20Tokens extends StatefulWidget {
-
   final int tokenIndex;
   final String tokenSymbol;
 
-  const SendERC20Tokens({Key? key, required this.tokenIndex, required this.tokenSymbol}) : super(key: key);
+  const SendERC20Tokens(
+      {Key? key, required this.tokenIndex, required this.tokenSymbol})
+      : super(key: key);
 
   @override
   _SendERC20TokensState createState() => _SendERC20TokensState();
@@ -21,7 +22,8 @@ class SendERC20Tokens extends StatefulWidget {
 
 class _SendERC20TokensState extends State<SendERC20Tokens> {
   final WalletController walletController = Get.put(WalletController());
-  final SendERC20TokenController sendERC20TokenController = Get.put(SendERC20TokenController());
+  final SendERC20TokenController sendERC20TokenController =
+      Get.put(SendERC20TokenController());
   TextEditingController toAddress = new TextEditingController();
   TextEditingController amountIn = new TextEditingController();
   TextEditingController gasPrice = new TextEditingController();
@@ -44,7 +46,8 @@ class _SendERC20TokensState extends State<SendERC20Tokens> {
         toAddress: toAddress.text,
         amountIn: double.parse(amountIn.text),
         context: context,
-        contractAddress: walletController.eRC20TokenBox.getAt(widget.tokenIndex - 1) ?? '');
+        contractAddress:
+            walletController.eRC20TokenBox.getAt(widget.tokenIndex - 1) ?? '');
   }
 
   @override
@@ -71,7 +74,11 @@ class _SendERC20TokensState extends State<SendERC20Tokens> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              color: kPrimaryColor.withOpacity(0.2),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [kPrimaryColor, kPrimaryColor2],
+                ),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -84,22 +91,22 @@ class _SendERC20TokensState extends State<SendERC20Tokens> {
                       },
                       iconSize: 40,
                       icon: Icon(Icons.arrow_back_rounded),
-                      color: Colors.black),
+                      color: Colors.white),
                   SizedBox(
                     height: 30,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 15.0),
                     child: Text(
-                      "Send Ether.",
-                      style: TextStyle(fontSize: 25),
+                      "Send ERC20 tokens.",
+                      style: TextStyle(fontSize: 25, color: Colors.white),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Text(
-                      "Send ether to another account from currently active account.",
-                      style: TextStyle(fontSize: 15),
+                      "Send erc20 token to another account from currently active account.",
+                      style: TextStyle(fontSize: 15, color: Colors.white),
                     ),
                   ),
                   SizedBox(
@@ -125,24 +132,28 @@ class _SendERC20TokensState extends State<SendERC20Tokens> {
             Row(
               children: [
                 Container(
-                  padding: EdgeInsets.all(10),
-                  width: MediaQuery.of(context).size.width-50,
+                  padding: EdgeInsets.only(left: 25, right: 25),
+                  width: MediaQuery.of(context).size.width - 50,
                   child: TextField1(
+                    obsucureText: false,
                     hint: "E.g. 0xc7..Ab",
                     label: "",
                     controller: toAddress,
                     inputType: TextInputType.text,
-                    errorText: "Contract Address should be 42 characters long",
+                    errorText: "Contract Address should be\n42 characters long",
                     validator: toAddress.text.length == 42,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 20.0),
-                  child: InkWell(onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => QRViewExample(text: toAddress),
-                    ));
-                  },child: Icon(Icons.qr_code_scanner, size: 30, color: kPrimaryColor)),
+                  child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => QRViewExample(text: toAddress),
+                        ));
+                      },
+                      child: Icon(Icons.qr_code_scanner,
+                          size: 30, color: kPrimaryColor2)),
                 )
               ],
             ),
@@ -159,9 +170,10 @@ class _SendERC20TokensState extends State<SendERC20Tokens> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.only(left: 25, right: 25, top: 15),
               width: MediaQuery.of(context).size.width,
               child: TextField1(
+                obsucureText: false,
                 hint: "E.g. 1.5",
                 label: "",
                 controller: amountIn,
@@ -209,13 +221,14 @@ class _SendERC20TokensState extends State<SendERC20Tokens> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(15),
+              padding: EdgeInsets.only(left: 25, right: 25, top: 15),
               width: MediaQuery.of(context).size.width,
               child: Row(
                 children: [
                   Expanded(
-                    flex: 3,
+                    flex: 2,
                     child: TextField1(
+                      obsucureText: false,
                       hint: "E.g. 1.000000009(in gwei)",
                       label: "",
                       controller: gasPrice,
@@ -226,25 +239,25 @@ class _SendERC20TokensState extends State<SendERC20Tokens> {
                   ),
                   Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 8.0, bottom: 20.0),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: kPrimaryColor,
-                            onPrimary: Colors.white,
-                            onSurface: Colors.grey,
-                          ),
-                          onPressed: () async {
-                            gasPrice.text = ".........";
-                            Map<String, dynamic> m = await estimateGasPriceAPI(
-                                network: walletController.network);
-                            gasPrice.text = (m["GasPrice"] ?? "").toString();
-                          },
-                          child: Text(
-                            "Estimate",
-                            style: TextStyle(fontSize: 10),
-                          ),
-                        ),
-                      ))
+                    padding: const EdgeInsets.only(left: 8.0, bottom: 30.0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: kPrimaryColor2,
+                        onPrimary: Colors.white,
+                        onSurface: Colors.grey,
+                      ),
+                      onPressed: () async {
+                        gasPrice.text = ".........";
+                        Map<String, dynamic> m = await estimateGasPriceAPI(
+                            network: walletController.network);
+                        gasPrice.text = (m["GasPrice"] ?? "").toString();
+                      },
+                      child: Text(
+                        "Estimate",
+                        style: TextStyle(fontSize: 10),
+                      ),
+                    ),
+                  ))
                 ],
               ),
             ),
@@ -261,9 +274,10 @@ class _SendERC20TokensState extends State<SendERC20Tokens> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.only(left: 25, right: 25, top: 15),
               width: MediaQuery.of(context).size.width,
               child: TextField1(
+                obsucureText: false,
                 hint: "E.g. c7..Ab",
                 label: "",
                 controller: privateKey,
@@ -278,8 +292,17 @@ class _SendERC20TokensState extends State<SendERC20Tokens> {
               child: InkWell(
                 onTap: () {
                   try {
-                     sendERC20TokenController.sendERC20(network: walletController.network, fromAddress:"0x"+walletController.activeAccount, toAddress: toAddress.text, contractAddress: walletController.eRC20TokenBox.getAt(widget.tokenIndex - 1) ?? '', amountIn: double.parse(amountIn.text), fromAddressPrivateKey: privateKey.text, gasPrice: double.parse(gasPrice.text), context: context);
-
+                    sendERC20TokenController.sendERC20(
+                        network: walletController.network,
+                        fromAddress: "0x" + walletController.activeAccount,
+                        toAddress: toAddress.text,
+                        contractAddress: walletController.eRC20TokenBox
+                                .getAt(widget.tokenIndex - 1) ??
+                            '',
+                        amountIn: double.parse(amountIn.text),
+                        fromAddressPrivateKey: privateKey.text,
+                        gasPrice: double.parse(gasPrice.text),
+                        context: context);
                   } catch (e) {
                     AwesomeDialog(
                         context: context,
@@ -288,8 +311,8 @@ class _SendERC20TokensState extends State<SendERC20Tokens> {
                         title: 'Oops!',
                         desc: e.toString(),
                         btnOkOnPress: () {},
-                        btnOkColor: kPrimaryColor
-                    )..show();
+                        btnOkColor: kPrimaryColor)
+                      ..show();
                   }
                 },
                 child: GetBuilder<SendERC20TokenController>(
@@ -297,6 +320,9 @@ class _SendERC20TokensState extends State<SendERC20Tokens> {
                     return Container(
                       height: 50,
                       decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [kPrimaryColor, kPrimaryColor2],
+                          ),
                           borderRadius: BorderRadius.circular(30),
                           color: kPrimaryColor),
                       child: Center(
@@ -316,5 +342,3 @@ class _SendERC20TokensState extends State<SendERC20Tokens> {
     );
   }
 }
-
-

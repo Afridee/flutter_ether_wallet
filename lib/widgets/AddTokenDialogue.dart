@@ -1,4 +1,6 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
+import 'package:ether_wallet_flutter_app/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -9,58 +11,43 @@ color}) {
   String tokenName = '';
   final walletController = Get.put(WalletController());
   // flutter defined function
-  showDialog(
+  AwesomeDialog(
     context: context,
-    builder: (BuildContext context) {
-      // return object of type Dialog
-      return AlertDialog(
-        title: new Text(
-          title,
-          style: TextStyle(
-              fontSize: 30, color: Colors.white, fontFamily: 'Varela'),
-        ),
-        content: new TextField(
-          style: TextStyle(
-              color: Colors.white
+    animType: AnimType.SCALE,
+    dialogType: DialogType.INFO_REVERSED,
+    body: Center(child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextField(
+        decoration: InputDecoration(
+          label: Text("Enter ERC20 token address"),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: kPrimaryColor, width: 1.0),
+            borderRadius: BorderRadius.all(Radius.circular(32.0)),
           ),
-          onChanged: (value){
-            tokenName = value;
-          },
-        ),
-        actions: <Widget>[
-          // usually buttons at the bottom of the dialog
-          new FlatButton(
-            child: new Text(
-              "Add",
-              style: TextStyle(
-                  fontSize: 17,
-                  color: Colors.white,
-                  fontFamily: 'Varela',
-                  fontWeight: FontWeight.bold),
-            ),
-            onPressed: () {
-              walletController.AddToken(tknAddress: tokenName);
-              Navigator.of(context).pop();
-            },
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: kPrimaryColor, width: 2.0),
+            borderRadius: BorderRadius.all(Radius.circular(32.0)),
           ),
-          new FlatButton(
-            child: new Text(
-              "Cancel",
-              style: TextStyle(
-                  fontSize: 17,
-                  color: Colors.white,
-                  fontFamily: 'Varela',
-                  fontWeight: FontWeight.bold),
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          )
-        ],
-        backgroundColor: color,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(20.0))),
-      );
+          contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(32.0)),
+          ),
+          focusColor: Colors.black,
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: kPrimaryColor, width: 1.0),
+            borderRadius: BorderRadius.all(Radius.circular(32.0)),
+          ),
+        ),
+        style: TextStyle(
+            color: Colors.black
+        ),
+        onChanged: (value){
+          tokenName = value;
+        },
+      ),
+    ),),
+    btnOkOnPress: () {
+      walletController.AddToken(tknAddress: tokenName);
     },
-  );
+  )..show();
 }

@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
 import 'package:ether_wallet_flutter_app/functions/importAccount.dart';
 import 'package:ether_wallet_flutter_app/utils/constants.dart';
@@ -96,6 +97,7 @@ class hmPageTopPart extends StatelessWidget {
                       );
                     }),
                     IconButton(
+                      tooltip: "Press this to create/import eth accounts.",
                       iconSize: 80,
                       icon: Icon(
                         CupertinoIcons.profile_circled,

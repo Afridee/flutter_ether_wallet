@@ -1,7 +1,7 @@
-import 'dart:convert';
+import 'dart:async';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ether_wallet_flutter_app/functions/createWebhookForAddressActivity.dart';
-import 'package:ether_wallet_flutter_app/models/EncryptedEthAccountModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -14,74 +14,151 @@ class LoginController extends GetxController {
   bool isLoggedIn = fba.FirebaseAuth.instance.currentUser != null;
   Box<Map> userObjBox = Hive.box<Map>("userObj");
   Map<dynamic, dynamic>? userObj = Hive.box<Map>("userObj").get("userObj") ?? {};
+  bool registerring = false;
+  bool allowButtonPress  = true;
 
-  loginWithFb() async {
-    await FacebookAuth.instance
-        .login(permissions: ["public_profile", "email"]).then((value) => {
-              FacebookAuth.instance.getUserData().then((userData) {
-                userObj = userData;
-                update();
-              })
-            });
+  regi(){
+    registerring = ! registerring;
+    update();
+  }
 
-    final AccessToken? accessToken = await FacebookAuth.instance.accessToken;
+  resetPassword({required String email, required BuildContext context}) async{
 
-    if (accessToken != null) {
-      final authResult;
-
-      authResult = await fba.FirebaseAuth.instance.signInWithCredential(
-        fba.FacebookAuthProvider.credential(accessToken.token),
-      );
-
-      isLoggedIn = fba.FirebaseAuth.instance.currentUser != null;
-      update();
-
-      final CollectionReference users =
-          FirebaseFirestore.instance.collection('Users');
-      users.doc(authResult.user.uid).set(userObj);
-
-      Map<dynamic, dynamic>? userObjTemp = userObj;
-
-      userObjBox.put("userObj", userObjTemp ?? {});
-
-      afterLogin(authResult);
+    if(email.contains("@") && email.contains(".com")){
+      await fba.FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.SUCCES,
+        animType: AnimType.BOTTOMSLIDE,
+        title: 'Email Sent',
+        desc: "A mail has been sent to ${email} for resetting password.",
+      )..show();
+    }else{
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.ERROR,
+        animType: AnimType.BOTTOMSLIDE,
+        title: 'Oops!',
+        desc: "Make Sure You have typed the email properly before pressing 'forgot your password'",
+      )..show();
     }
   }
 
-  loginWithEmail({required String email, required String password}) async {
-    final fba.UserCredential authResult;
+  loginWithFb({required BuildContext context}) async {
+    if(allowButtonPress){
 
-    authResult = await fba.FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
-
-    isLoggedIn = fba.FirebaseAuth.instance.currentUser != null;
-    update();
-
-    if(isLoggedIn){
-      userObj = {
-        "name" : authResult.user!.email,
-        "picture" : {
-          "data" : {
-            "url" : "https://firebasestorage.googleapis.com/v0/b/ether-wallet-56723.appspot.com/o/profile.png?alt=media&token=8d98c998-6949-476d-ba7f-5ff00a8f8343"
-          }
-        }
-      };
-
-      final CollectionReference users =
-      FirebaseFirestore.instance.collection('Users');
-      users.doc(authResult.user!.uid).set({
-        "name" : authResult.user!.email,
-        "picture" : {
-          "data" : {
-            "url" : "https://firebasestorage.googleapis.com/v0/b/ether-wallet-56723.appspot.com/o/profile.png?alt=media&token=8d98c998-6949-476d-ba7f-5ff00a8f8343"
-          }
-        }
+      allowButtonPress = false;
+      update();
+      Timer(Duration(seconds: 5),() async{
+        allowButtonPress = true;
+        update();
       });
 
-      Map<dynamic, dynamic>? userObjTemp = userObj;
+      try {
+        await FacebookAuth.instance
+                  .login(permissions: ["public_profile", "email"]).then((value) => {
+                FacebookAuth.instance.getUserData().then((userData) {
+                  userObj = userData;
+                  update();
+                })
+              });
 
-      userObjBox.put("userObj", userObjTemp ?? {});
+        final AccessToken? accessToken = await FacebookAuth.instance.accessToken;
 
-      afterLogin(authResult);
+        if (accessToken != null) {
+                final authResult;
+
+                authResult = await fba.FirebaseAuth.instance.signInWithCredential(
+                  fba.FacebookAuthProvider.credential(accessToken.token),
+                );
+
+                isLoggedIn = fba.FirebaseAuth.instance.currentUser != null;
+                update();
+
+                final CollectionReference users =
+                FirebaseFirestore.instance.collection('Users');
+                users.doc(authResult.user.uid).set(userObj);
+
+                Map<dynamic, dynamic>? userObjTemp = userObj;
+
+                userObjBox.put("userObj", userObjTemp ?? {});
+
+                afterLogin(authResult);
+              }
+      } catch (e) {
+        allowButtonPress = true;
+        update();
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.ERROR,
+          animType: AnimType.BOTTOMSLIDE,
+          title: 'Oops!',
+          desc: e.toString(),
+        )..show();
+      }
+    }
+  }
+
+  loginWithEmail({required String email, required String password, required BuildContext context}) async {
+    if(allowButtonPress){
+      allowButtonPress = false;
+      update();
+      Timer(Duration(seconds: 5),() async{
+        allowButtonPress = true;
+        update();
+      });
+
+      final fba.UserCredential authResult;
+
+      try {
+
+        if(registerring){
+          authResult = await fba.FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+        }else{
+          authResult = await fba.FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+        }
+
+        isLoggedIn = fba.FirebaseAuth.instance.currentUser != null;
+        update();
+
+        if(isLoggedIn){
+          userObj = {
+            "name" : authResult.user!.email,
+            "picture" : {
+              "data" : {
+                "url" : "https://firebasestorage.googleapis.com/v0/b/ether-wallet-56723.appspot.com/o/profile.png?alt=media&token=8d98c998-6949-476d-ba7f-5ff00a8f8343"
+              }
+            }
+          };
+
+          final CollectionReference users =
+          FirebaseFirestore.instance.collection('Users');
+          users.doc(authResult.user!.uid).set({
+            "name" : authResult.user!.email,
+            "picture" : {
+              "data" : {
+                "url" : "https://firebasestorage.googleapis.com/v0/b/ether-wallet-56723.appspot.com/o/profile.png?alt=media&token=8d98c998-6949-476d-ba7f-5ff00a8f8343"
+              }
+            }
+          });
+
+          Map<dynamic, dynamic>? userObjTemp = userObj;
+
+          userObjBox.put("userObj", userObjTemp ?? {});
+
+          afterLogin(authResult);
+        }
+      } catch (e) {
+        allowButtonPress = true;
+        update();
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.ERROR,
+          animType: AnimType.BOTTOMSLIDE,
+          title: 'Oops!',
+          desc: e.toString(),
+        )..show();
+      }
     }
   }
 

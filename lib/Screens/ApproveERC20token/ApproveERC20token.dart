@@ -58,7 +58,11 @@ class _ApproveERC20tokenState extends State<ApproveERC20token> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              color: kPrimaryColor.withOpacity(0.2),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [kPrimaryColor, kPrimaryColor2],
+                ),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -71,22 +75,22 @@ class _ApproveERC20tokenState extends State<ApproveERC20token> {
                       },
                       iconSize: 40,
                       icon: Icon(Icons.arrow_back_rounded),
-                      color: Colors.black),
+                      color: Colors.white),
                   SizedBox(
                     height: 30,
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 15.0),
+                    padding: const EdgeInsets.only(left: 25.0),
                     child: Text(
                       "Approve ERC20 Token.",
-                      style: TextStyle(fontSize: 25),
+                      style: TextStyle(fontSize: 25, color: Colors.white),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(15.0),
+                    padding: const EdgeInsets.all(25.0),
                     child: Text(
-                      "Approve an erc20 token before swapping.",
-                      style: TextStyle(fontSize: 15),
+                      "Approve an erc20 token for Uniswap before swapping.",
+                      style: TextStyle(fontSize: 15, color: Colors.white),
                     ),
                   ),
                   SizedBox(
@@ -110,7 +114,7 @@ class _ApproveERC20tokenState extends State<ApproveERC20token> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.only(left: 25, right: 25),
               width: MediaQuery.of(context).size.width,
               child: TextField1(
                 hint: "E.g. 0xc7..Ab",
@@ -118,14 +122,14 @@ class _ApproveERC20tokenState extends State<ApproveERC20token> {
                 controller: tokenAddress,
                 inputType: TextInputType.text,
                 errorText: "Contract Address should be 42 characters long",
-                validator: tokenAddress.text.length == 42,
+                validator: tokenAddress.text.length == 42, obsucureText: false,
               ),
             ),
             Divider(),
             Container(
               padding: EdgeInsets.only(top: 10, left: 10, right: 10),
               width: MediaQuery.of(context).size.width,
-              height: 30,
+              height: 60,
               child: Center(
                 child: Text(
                   "Amount to approve:",
@@ -134,9 +138,10 @@ class _ApproveERC20tokenState extends State<ApproveERC20token> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.only(left: 25, right: 25),
               width: MediaQuery.of(context).size.width,
               child: TextField1(
+                obsucureText: false,
                 hint: "E.g. 1.5",
                 label: "",
                 controller: amountIn,
@@ -184,13 +189,14 @@ class _ApproveERC20tokenState extends State<ApproveERC20token> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(15),
+              padding: EdgeInsets.only(left: 25, right: 25, top: 15),
               width: MediaQuery.of(context).size.width,
               child: Row(
                 children: [
                   Expanded(
-                    flex: 3,
+                    flex: 2,
                     child: TextField1(
+                      obsucureText: false,
                       hint: "E.g. 1.000000009(in gwei)",
                       label: "",
                       controller: gasPrice,
@@ -201,10 +207,10 @@ class _ApproveERC20tokenState extends State<ApproveERC20token> {
                   ),
                   Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 8.0, bottom: 20.0),
+                        padding: const EdgeInsets.only(left: 8.0, bottom: 30.0),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            primary: kPrimaryColor,
+                            primary: kPrimaryColor2,
                             onPrimary: Colors.white,
                             onSurface: Colors.grey,
                           ),
@@ -236,9 +242,10 @@ class _ApproveERC20tokenState extends State<ApproveERC20token> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.only(right: 25, left: 25,top: 15),
               width: MediaQuery.of(context).size.width,
               child: TextField1(
+                obsucureText: false,
                 hint: "E.g. c7..Ab",
                 label: "",
                 controller: privateKey,
@@ -271,8 +278,11 @@ class _ApproveERC20tokenState extends State<ApproveERC20token> {
                     return Container(
                       height: 50,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: kPrimaryColor),
+                        borderRadius: BorderRadius.circular(30),
+                        gradient: LinearGradient(
+                          colors: [kPrimaryColor, kPrimaryColor2],
+                        ),
+                      ),
                       child: Center(
                         child: Text(
                           aerc20tc.allowButtonPress ? "Approve" : "Processing...",

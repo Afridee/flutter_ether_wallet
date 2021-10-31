@@ -39,8 +39,6 @@ class _SendEthersState extends State<SendEthers> {
     super.dispose();
   }
 
-
-
   @override
   void initState() {
     toAddress.addListener(() {
@@ -65,7 +63,11 @@ class _SendEthersState extends State<SendEthers> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              color: kPrimaryColor.withOpacity(0.2),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [kPrimaryColor, kPrimaryColor2],
+                ),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -78,7 +80,7 @@ class _SendEthersState extends State<SendEthers> {
                       },
                       iconSize: 40,
                       icon: Icon(Icons.arrow_back_rounded),
-                      color: Colors.black),
+                      color: Colors.white),
                   SizedBox(
                     height: 30,
                   ),
@@ -86,14 +88,14 @@ class _SendEthersState extends State<SendEthers> {
                     padding: const EdgeInsets.only(left: 15.0),
                     child: Text(
                       "Send Ether.",
-                      style: TextStyle(fontSize: 25),
+                      style: TextStyle(fontSize: 25, color: Colors.white),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Text(
                       "Send ether to another account from currently active account.",
-                      style: TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: 15, color: Colors.white),
                     ),
                   ),
                   SizedBox(
@@ -120,24 +122,26 @@ class _SendEthersState extends State<SendEthers> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  padding: EdgeInsets.all(10),
-                  width: MediaQuery.of(context).size.width-50,
+                  padding: EdgeInsets.only(left: 25, right: 25),
+                  width: MediaQuery.of(context).size.width - 50,
                   child: TextField1(
+                    obsucureText: false,
                     hint: "E.g. 0xc7..Ab",
                     label: "",
                     controller: toAddress,
                     inputType: TextInputType.text,
-                    errorText: "Contract Address should be 42 characters long",
+                    errorText: "Contract Address should be 42\ncharacters long",
                     validator: toAddress.text.length == 42,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
-                  child: InkWell(onTap: (){
+                InkWell(
+                  onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => QRViewExample(text: toAddress),
                     ));
-                  },child: Icon(Icons.qr_code_scanner, size: 30, color: kPrimaryColor)),
+                  },
+                  child: Icon(Icons.qr_code_scanner,
+                      size: 30, color: kPrimaryColor2),
                 )
               ],
             ),
@@ -154,9 +158,10 @@ class _SendEthersState extends State<SendEthers> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.only(left: 25, right: 25, top: 15),
               width: MediaQuery.of(context).size.width,
               child: TextField1(
+                obsucureText: false,
                 hint: "E.g. 1.5",
                 label: "",
                 controller: value,
@@ -204,13 +209,14 @@ class _SendEthersState extends State<SendEthers> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(15),
+              padding: EdgeInsets.only(left: 25, right: 25, top: 10),
               width: MediaQuery.of(context).size.width,
               child: Row(
                 children: [
                   Expanded(
-                    flex: 3,
+                    flex: 2,
                     child: TextField1(
+                      obsucureText: false,
                       hint: "E.g. 1.000000009(in gwei)",
                       label: "",
                       controller: gasPrice,
@@ -221,10 +227,10 @@ class _SendEthersState extends State<SendEthers> {
                   ),
                   Expanded(
                       child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0, bottom: 20.0),
+                    padding: const EdgeInsets.only(left: 8.0, bottom: 30.0),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: kPrimaryColor,
+                        primary: kPrimaryColor2,
                         onPrimary: Colors.white,
                         onSurface: Colors.grey,
                       ),
@@ -256,9 +262,10 @@ class _SendEthersState extends State<SendEthers> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.only(left: 25, right: 25),
               width: MediaQuery.of(context).size.width,
               child: TextField1(
+                obsucureText: false,
                 hint: "E.g. c7..Ab",
                 label: "",
                 controller: privateKey,
@@ -274,13 +281,13 @@ class _SendEthersState extends State<SendEthers> {
                 onTap: () {
                   try {
                     sendEthController.sendETH(
-                                          network: walletController.network,
-                                          fromAddress: "0x" + walletController.activeAccount,
-                                          toAddress: toAddress.text,
-                                          value: double.parse(value.text),
-                                          fromAddressPrivateKey: privateKey.text,
-                                          gasPrice: double.parse(gasPrice.text),
-                                          context: context);
+                        network: walletController.network,
+                        fromAddress: "0x" + walletController.activeAccount,
+                        toAddress: toAddress.text,
+                        value: double.parse(value.text),
+                        fromAddressPrivateKey: privateKey.text,
+                        gasPrice: double.parse(gasPrice.text),
+                        context: context);
                   } catch (e) {
                     AwesomeDialog(
                         context: context,
@@ -289,8 +296,8 @@ class _SendEthersState extends State<SendEthers> {
                         title: 'Oops!',
                         desc: e.toString(),
                         btnOkOnPress: () {},
-                        btnOkColor: kPrimaryColor
-                    )..show();
+                        btnOkColor: kPrimaryColor)
+                      ..show();
                   }
                 },
                 child: GetBuilder<SendEthController>(
@@ -298,8 +305,11 @@ class _SendEthersState extends State<SendEthers> {
                     return Container(
                       height: 50,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: kPrimaryColor),
+                        borderRadius: BorderRadius.circular(30),
+                        gradient: LinearGradient(
+                          colors: [kPrimaryColor, kPrimaryColor2],
+                        ),
+                      ),
                       child: Center(
                         child: Text(
                           stftc.allowButtonPress ? "Send" : "Processing...",

@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ether_wallet_flutter_app/functions/DecodeInputDataAPI.dart';
 import 'package:ether_wallet_flutter_app/functions/createWebhookForAddressActivity.dart';
 import 'package:ether_wallet_flutter_app/functions/getABI.dart';
@@ -31,6 +33,7 @@ import '../functions/createEthAccountAPI.dart';
 class WalletController extends GetxController {
   bool loading = false;
   int lastTransactionScreen = -1;
+  bool networkRecentlyChanged = false;
 
   Box<String> eRC20TokenBox = Hive.box<String>('ERC20Tokens');
 
@@ -48,9 +51,16 @@ class WalletController extends GetxController {
   List<TransactionListtransactionmodel> ethTransfers = [];
 
   changeExplorer(String network) {
-    this.network = network;
-    update();
-    setUpEthAccount(ethAccount: activeAccount);
+    if(!networkRecentlyChanged){
+      networkRecentlyChanged = true;
+      Timer(Duration(seconds: 5), () async {
+        networkRecentlyChanged = false;
+        update();
+      });
+      this.network = network;
+      update();
+      setUpEthAccount(ethAccount: activeAccount);
+    }
   }
 
   Future<String> decodeInputData(
@@ -126,13 +136,18 @@ class WalletController extends GetxController {
 
     for (int i = 0; i < eRC20TokenBox.length; i++) {
       if (eRC20TokenBox.getAt(i) != null) {
-        String tknAddress = eRC20TokenBox.getAt(i).toString();
-        var response = await getTokenBalanceAPI(
-            network: network,
-            tokenAddress: tknAddress,
-            walletAddress: '0x' + activeAccount);
-        GetTokenBalanceModel token = GetTokenBalanceModel.fromJson(response);
-        tokenList.add(token);
+        ///todo: put a try catch in here:
+        try {
+          String tknAddress = eRC20TokenBox.getAt(i).toString();
+          var response = await getTokenBalanceAPI(
+                      network: network,
+                      tokenAddress: tknAddress,
+                      walletAddress: '0x' + activeAccount);
+          GetTokenBalanceModel token = GetTokenBalanceModel.fromJson(response);
+          tokenList.add(token);
+        } catch (e) {
+          print(e);
+        }
       }
     }
 
@@ -179,8 +194,14 @@ class WalletController extends GetxController {
 
     update();
 
-    if (activeAccount == "Not Available" && ethAccounts.length > 0) {
+    if (ethAccounts.length > 0) {
       setUpEthAccount(ethAccount: ethAccounts[0].address);
+    }else{
+       activeAccount = 'Not Available';
+       activeAccountEthBalance = '0';
+       activeAccountUSDBalance = '0';
+       tokenList = [];
+       update();
     }
   }
 
