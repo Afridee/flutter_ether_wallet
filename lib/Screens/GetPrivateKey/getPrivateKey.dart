@@ -76,7 +76,7 @@ class _GetPrivateKeyState extends State<GetPrivateKey> {
               InkWell(
                 onTap: () async{
                  String privateKey = await walletController.getPrivateKey(password: password.text);
-                 FlutterClipboard.copy(privateKey)
+                 FlutterClipboard.copy(privateKey.substring(2,privateKey.length))
                      .then((value) => {
                  AwesomeDialog(
                  padding: EdgeInsets.all(15),
@@ -84,7 +84,7 @@ class _GetPrivateKeyState extends State<GetPrivateKey> {
                  dialogType: privateKey!="******" ? DialogType.SUCCES : DialogType.ERROR,
                  animType: AnimType.BOTTOMSLIDE,
                  title: privateKey!="******" ? 'Private key has been copied to clipboard!':"Wrong password!",
-                 desc: "Private Key: "+ privateKey,
+                 desc: "Private Key: "+ privateKey.substring(2,privateKey.length),
                  btnOkOnPress: () {},
                  btnOkColor: kPrimaryColor)
                  ..show()

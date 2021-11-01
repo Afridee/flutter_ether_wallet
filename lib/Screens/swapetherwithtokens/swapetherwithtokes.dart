@@ -368,6 +368,7 @@ class _SwapEthersWithTokensState extends State<SwapEthersWithTokens> {
               child: InkWell(
                 onTap: () {
                   try {
+                    //print(privateKey.text);
                     swapetherwithtokesController.swap(
                         network: walletController.network,
                         privateKey: privateKey.text.trim(),
