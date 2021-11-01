@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:ether_wallet_flutter_app/Screens/GetPrivateKey/getPrivateKey.dart';
 import 'package:ether_wallet_flutter_app/Screens/ScanQRcode/ScanQrcode.dart';
 import 'package:ether_wallet_flutter_app/controllers/sendEthController.dart';
 import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
@@ -262,16 +263,47 @@ class _SendEthersState extends State<SendEthers> {
               ),
             ),
             Container(
-              padding: EdgeInsets.only(left: 25, right: 25),
+              padding: EdgeInsets.only(left: 25, right: 25, top: 15),
               width: MediaQuery.of(context).size.width,
-              child: TextField1(
-                obsucureText: false,
-                hint: "E.g. c7..Ab",
-                label: "",
-                controller: privateKey,
-                inputType: TextInputType.text,
-                validator: privateKey.text.length == 64,
-                errorText: "private key length should be 64 characters",
+              child: Row(
+                children: [
+                  Expanded(
+                    flex:3,
+                    child: TextField1(
+                      obsucureText: false,
+                      hint: "E.g. c7..Ab",
+                      label: "",
+                      controller: privateKey,
+                      inputType: TextInputType.text,
+                      validator: privateKey.text.length == 64,
+                      errorText: "private key length\nshould be 64 characters",
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0, bottom: 30.0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: kPrimaryColor2,
+                          onPrimary: Colors.white,
+                          onSurface: Colors.grey,
+                        ),
+                        onPressed: () async {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => new GetPrivateKey(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "get",
+                          style: TextStyle(fontSize: 10),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               ),
             ),
             Divider(),
@@ -283,10 +315,10 @@ class _SendEthersState extends State<SendEthers> {
                     sendEthController.sendETH(
                         network: walletController.network,
                         fromAddress: "0x" + walletController.activeAccount,
-                        toAddress: toAddress.text,
-                        value: double.parse(value.text),
-                        fromAddressPrivateKey: privateKey.text,
-                        gasPrice: double.parse(gasPrice.text),
+                        toAddress: toAddress.text.trim(),
+                        value: double.parse(value.text.trim()),
+                        fromAddressPrivateKey: privateKey.text.trim(),
+                        gasPrice: double.parse(gasPrice.text.trim()),
                         context: context);
                   } catch (e) {
                     AwesomeDialog(

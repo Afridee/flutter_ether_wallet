@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:ether_wallet_flutter_app/Screens/ApproveERC20token/ApproveERC20token.dart';
+import 'package:ether_wallet_flutter_app/Screens/GetPrivateKey/getPrivateKey.dart';
 import 'package:ether_wallet_flutter_app/controllers/loginController.dart';
 import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
 import 'package:ether_wallet_flutter_app/utils/constants.dart';
@@ -54,15 +55,15 @@ class _MenuScreenState extends State<MenuScreen> {
                     ),
                     GetBuilder<LoginController>(builder: (lc) {
                       return Container(
-                        width: 150,
+                          width: 150,
                           height: 30,
                           child: AutoSizeText(
-                        lc.userObj!["name"],
-                        style: GoogleFonts.poppins(
-                            fontStyle: FontStyle.normal,
-                            fontSize: 20,
-                            color: Colors.white),
-                      ));
+                            lc.userObj!["name"],
+                            style: GoogleFonts.poppins(
+                                fontStyle: FontStyle.normal,
+                                fontSize: 20,
+                                color: Colors.white),
+                          ));
                     })
                   ],
                 ),
@@ -149,6 +150,36 @@ class _MenuScreenState extends State<MenuScreen> {
                         SizedBox(width: 20),
                         Text(
                           'Buy Ether',
+                          style: TextStyle(color: Colors.white, fontSize: 15),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Divider(
+                color: Colors.white,
+              ),
+              InkWell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => new GetPrivateKey(),
+                        ),
+                      );
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(width: 30),
+                        Icon(Icons.vpn_key, color: Colors.white, size: 30),
+                        SizedBox(width: 20),
+                        Text(
+                          'Get Private Key',
                           style: TextStyle(color: Colors.white, fontSize: 15),
                         )
                       ],

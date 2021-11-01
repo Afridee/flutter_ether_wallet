@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:ether_wallet_flutter_app/Screens/GetPrivateKey/getPrivateKey.dart';
 import 'package:ether_wallet_flutter_app/controllers/ApproveERC20tokenController.dart';
 import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
 import 'package:ether_wallet_flutter_app/functions/estimateGasPriceAPI.dart';
@@ -18,10 +19,15 @@ class _ApproveERC20tokenState extends State<ApproveERC20token> {
   TextEditingController gasPrice = new TextEditingController();
   TextEditingController privateKey = new TextEditingController();
   final WalletController walletController = Get.put(WalletController());
-  final ApproveERC20tokenController approveERC20tokenController = Get.put(ApproveERC20tokenController());
+  final ApproveERC20tokenController approveERC20tokenController =
+      Get.put(ApproveERC20tokenController());
 
-  estimate(){
-    approveERC20tokenController.estimateGasForApprovingToken(network: walletController.network, tokenAddress: tokenAddress.text, from: "0x"+walletController.activeAccount, amountIn: amountIn.text);
+  estimate() {
+    approveERC20tokenController.estimateGasForApprovingToken(
+        network: walletController.network,
+        tokenAddress: tokenAddress.text,
+        from: "0x" + walletController.activeAccount,
+        amountIn: amountIn.text);
   }
 
   @override
@@ -122,7 +128,8 @@ class _ApproveERC20tokenState extends State<ApproveERC20token> {
                 controller: tokenAddress,
                 inputType: TextInputType.text,
                 errorText: "Contract Address should be 42 characters long",
-                validator: tokenAddress.text.length == 42, obsucureText: false,
+                validator: tokenAddress.text.length == 42,
+                obsucureText: false,
               ),
             ),
             Divider(),
@@ -206,26 +213,27 @@ class _ApproveERC20tokenState extends State<ApproveERC20token> {
                     ),
                   ),
                   Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8.0, bottom: 30.0),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: kPrimaryColor2,
-                            onPrimary: Colors.white,
-                            onSurface: Colors.grey,
-                          ),
-                          onPressed: () async {
-                            gasPrice.text = ".........";
-                            Map<String, dynamic> m = await estimateGasPriceAPI(
-                                network: walletController.network);
-                            gasPrice.text = (m["GasPrice"] ?? "").toString();
-                          },
-                          child: Text(
-                            "Estimate",
-                            style: TextStyle(fontSize: 10),
-                          ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0, bottom: 30.0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: kPrimaryColor2,
+                          onPrimary: Colors.white,
+                          onSurface: Colors.grey,
                         ),
-                      ))
+                        onPressed: () async {
+                          gasPrice.text = ".........";
+                          Map<String, dynamic> m = await estimateGasPriceAPI(
+                              network: walletController.network);
+                          gasPrice.text = (m["GasPrice"] ?? "").toString();
+                        },
+                        child: Text(
+                          "Estimate",
+                          style: TextStyle(fontSize: 10),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -242,16 +250,47 @@ class _ApproveERC20tokenState extends State<ApproveERC20token> {
               ),
             ),
             Container(
-              padding: EdgeInsets.only(right: 25, left: 25,top: 15),
+              padding: EdgeInsets.only(right: 25, left: 25, top: 15),
               width: MediaQuery.of(context).size.width,
-              child: TextField1(
-                obsucureText: false,
-                hint: "E.g. c7..Ab",
-                label: "",
-                controller: privateKey,
-                inputType: TextInputType.text,
-                validator: privateKey.text.length == 64,
-                errorText: "private key length should be 64 characters",
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: TextField1(
+                      obsucureText: false,
+                      hint: "E.g. c7..Ab",
+                      label: "",
+                      controller: privateKey,
+                      inputType: TextInputType.text,
+                      validator: privateKey.text.length == 64,
+                      errorText: "private key length should be\n64 characters",
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0, bottom: 30.0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: kPrimaryColor2,
+                          onPrimary: Colors.white,
+                          onSurface: Colors.grey,
+                        ),
+                        onPressed: () async {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => new GetPrivateKey(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "get",
+                          style: TextStyle(fontSize: 10),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             Divider(),
@@ -260,7 +299,14 @@ class _ApproveERC20tokenState extends State<ApproveERC20token> {
               child: InkWell(
                 onTap: () {
                   try {
-                    approveERC20tokenController.approve(network: walletController.network, tokenAddress: tokenAddress.text, privateKey: privateKey.text, gasPrice: double.parse(gasPrice.text), from: "0x"+walletController.activeAccount, amountIn: amountIn.text, context: context);
+                    approveERC20tokenController.approve(
+                        network: walletController.network,
+                        tokenAddress: tokenAddress.text.trim(),
+                        privateKey: privateKey.text.trim(),
+                        gasPrice: double.parse(gasPrice.text.trim()),
+                        from: "0x" + walletController.activeAccount,
+                        amountIn: amountIn.text.trim(),
+                        context: context);
                   } catch (e) {
                     AwesomeDialog(
                         context: context,
@@ -269,8 +315,8 @@ class _ApproveERC20tokenState extends State<ApproveERC20token> {
                         title: 'Oops!',
                         desc: e.toString(),
                         btnOkOnPress: () {},
-                        btnOkColor: kPrimaryColor
-                    )..show();
+                        btnOkColor: kPrimaryColor)
+                      ..show();
                   }
                 },
                 child: GetBuilder<ApproveERC20tokenController>(
@@ -285,7 +331,9 @@ class _ApproveERC20tokenState extends State<ApproveERC20token> {
                       ),
                       child: Center(
                         child: Text(
-                          aerc20tc.allowButtonPress ? "Approve" : "Processing...",
+                          aerc20tc.allowButtonPress
+                              ? "Approve"
+                              : "Processing...",
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -300,5 +348,3 @@ class _ApproveERC20tokenState extends State<ApproveERC20token> {
     );
   }
 }
-
-

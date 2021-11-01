@@ -1,21 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ether_wallet_flutter_app/functions/DecodeInputDataAPI.dart';
-import 'package:ether_wallet_flutter_app/functions/createWebhookForAddressActivity.dart';
 import 'package:ether_wallet_flutter_app/functions/getABI.dart';
-import 'package:ether_wallet_flutter_app/functions/getAllWebhooks.dart';
 import 'package:ether_wallet_flutter_app/functions/getERC20txList.dart';
 import 'package:ether_wallet_flutter_app/functions/getETHBalanceAPI.dart';
 import 'package:ether_wallet_flutter_app/functions/getEthPrice.dart';
+import 'package:ether_wallet_flutter_app/functions/getPrivateKey.dart';
 import 'package:ether_wallet_flutter_app/functions/getTokenBalanceAPI.dart';
 import 'package:ether_wallet_flutter_app/functions/gettxList.dart';
 import 'package:ether_wallet_flutter_app/functions/importAccount.dart';
-import 'package:ether_wallet_flutter_app/functions/updateWebhookAddresses.dart';
 import 'package:ether_wallet_flutter_app/models/ERC20tokenTransferModel.dart';
 import 'package:ether_wallet_flutter_app/models/EncryptedEthAccountModel.dart';
-import 'package:ether_wallet_flutter_app/models/WebhooksModel.dart';
 import 'package:ether_wallet_flutter_app/models/getTokenBalanceModel.dart';
 import 'package:ether_wallet_flutter_app/models/transactionListtransactionmodel.dart';
 import 'package:ether_wallet_flutter_app/utils/constants.dart';
@@ -25,7 +20,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import '../functions/createEthAccountAPI.dart';
@@ -49,6 +43,16 @@ class WalletController extends GetxController {
   List<Erc20TokenTransferModel> erc20transfers = [];
 
   List<TransactionListtransactionmodel> ethTransfers = [];
+
+ Future<String> getPrivateKey({required String password}) async{
+   try {
+     List<EncryptedEthAccountModel> account = ethAccounts.where((element) => element.address==activeAccount).toList();
+     Map<String, dynamic> m = await getPrivateKeyAPI(password: password, account: account[0]);
+     return m["error"]==null ? m["privateKey"] : "******";
+   } catch (e) {
+     return "******";
+   }
+  }
 
   changeExplorer(String network) {
     if(!networkRecentlyChanged){

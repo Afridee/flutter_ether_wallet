@@ -6,8 +6,7 @@ import 'package:get/get.dart';
 
 
 //function 5:
-void addTokenDialog({required BuildContext context,required String title,required Color
-color}) {
+void addTokenDialog({required BuildContext context}) {
   String tokenName = '';
   final walletController = Get.put(WalletController());
   // flutter defined function
@@ -46,6 +45,7 @@ color}) {
         },
       ),
     ),),
+    btnOkText: "Add",
     btnOkOnPress: () {
       walletController.AddToken(tknAddress: tokenName);
     },

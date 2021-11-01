@@ -104,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           iconSize: 70,
                           color: Colors.white,
                           onPressed: () {
-                            addTokenDialog(context: context, title: "Enter ERC20 token address", color: kPrimaryColor);
+                            addTokenDialog(context: context);
                           },
                         ),
                       ),

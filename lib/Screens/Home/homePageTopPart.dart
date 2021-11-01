@@ -103,7 +103,7 @@ class hmPageTopPart extends StatelessWidget {
                         CupertinoIcons.profile_circled,
                         color: Colors.white,
                       ),
-                      onPressed: () {
+                      onPressed: () async{
                         bottomSheetOfEthAccounts(context);
                       },
                     )

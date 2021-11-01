@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:ether_wallet_flutter_app/Screens/GetPrivateKey/getPrivateKey.dart';
 import 'package:ether_wallet_flutter_app/Screens/swaptokenforether/SwapTokenForEth.dart';
 import 'package:ether_wallet_flutter_app/controllers/SwapTokenForTokenController.dart';
 import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
@@ -178,14 +179,45 @@ class _SwapTokenForTokenState extends State<SwapTokenForToken> {
             Container(
               padding: EdgeInsets.only(left: 25, right: 25, top: 15),
               width: MediaQuery.of(context).size.width,
-              child: TextField1(
-                obsucureText: false,
-                hint: "E.g. c7..Ab",
-                label: "",
-                controller: privateKey,
-                inputType: TextInputType.text,
-                validator: privateKey.text.length == 64,
-                errorText: "private key length should be 64 characters",
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: TextField1(
+                      obsucureText: false,
+                      hint: "E.g. c7..Ab",
+                      label: "",
+                      controller: privateKey,
+                      inputType: TextInputType.text,
+                      validator: privateKey.text.length == 64,
+                      errorText: "private key length\nshould be 64 characters",
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0, bottom: 30.0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: kPrimaryColor2,
+                          onPrimary: Colors.white,
+                          onSurface: Colors.grey,
+                        ),
+                        onPressed: () async {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => new GetPrivateKey(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "get",
+                          style: TextStyle(fontSize: 10),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               ),
             ),
             Divider(),
@@ -271,7 +303,7 @@ class _SwapTokenForTokenState extends State<SwapTokenForToken> {
                   ),
                   Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 8.0, bottom: 30.0),
+                    padding: const EdgeInsets.only(left: 8.0, bottom: 30.0),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         primary: kPrimaryColor2,
@@ -380,15 +412,18 @@ class _SwapTokenForTokenState extends State<SwapTokenForToken> {
                     //Makes the swap:
                     try {
                       swapTokenForTokenController.SwapTokens(
-                          context: context,
-                          network: walletController.network,
-                          fromContractAddress: walletController.eRC20TokenBox
-                                  .getAt(widget.tokenIndex - 1) ??
-                              '',
-                          toContractAddress: toContractAddress.text,
-                          amountIn: double.parse(amountIn.text),
-                          privateKey: privateKey.text,
-                          gasPrice: double.parse(gasPrice.text));
+                        context: context,
+                        network: walletController.network,
+                        fromContractAddress: walletController.eRC20TokenBox
+                                .getAt(widget.tokenIndex - 1) ??
+                            '',
+                        toContractAddress: toContractAddress.text.trim(),
+                        amountIn: double.parse(amountIn.text.trim()),
+                        privateKey: privateKey.text.trim(),
+                        gasPrice: double.parse(
+                          gasPrice.text.trim(),
+                        ),
+                      );
                     } catch (error) {
                       AwesomeDialog(
                           context: context,
