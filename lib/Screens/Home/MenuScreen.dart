@@ -43,10 +43,19 @@ class _MenuScreenState extends State<MenuScreen> {
                   children: [
                     GetBuilder<LoginController>(
                       builder: (lc) {
-                        return CircleAvatar(
-                          radius: 40,
-                          backgroundImage: NetworkImage(
-                              lc.userObj!["picture"]["data"]["url"]),
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(45)
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: CircleAvatar(
+                              radius: 40,
+                              backgroundImage: NetworkImage(
+                                  lc.userObj!["picture"]["data"]["url"]),
+                            ),
+                          ),
                         );
                       },
                     ),

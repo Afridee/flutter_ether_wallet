@@ -71,12 +71,21 @@ class AuthenticationPage extends StatelessWidget {
                     SizedBox(
                       height: 50,
                     ),
-                    CircleAvatar(
-                      radius: 60.0,
-                      child: ClipRRect(
-                        child:
-                            Image.network(userObj!["picture"]["data"]["url"]),
-                        borderRadius: BorderRadius.circular(60.0),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,borderRadius: BorderRadius.circular(68)
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: 60.0,
+                          child: ClipRRect(
+                            child:
+                                Image.network(userObj!["picture"]["data"]["url"]),
+                            borderRadius: BorderRadius.circular(60.0),
+                          ),
+                        ),
                       ),
                     ),
                     //Text(apc.userObj!["id"]),

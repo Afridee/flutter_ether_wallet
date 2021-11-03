@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:fancy_on_boarding/fancy_on_boarding.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -6,6 +7,7 @@ import 'package:hive/hive.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'Screens/LoginPage.dart';
+import 'Screens/OnboardingScreen/onboardingScreen.dart';
 
 
 void main() async{
@@ -42,8 +44,50 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: Onboardinscreen(),
     );
   }
 }
+
+class Onboardinscreen extends StatefulWidget {
+  const Onboardinscreen({Key? key}) : super(key: key);
+
+  @override
+  _OnboardinscreenState createState() => _OnboardinscreenState();
+}
+
+class _OnboardinscreenState extends State<Onboardinscreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      //Pass pageList and the mainPage route.
+      body: FancyOnBoarding(
+         skipButtonTextStyle: TextStyle(
+           color: Colors.grey,
+           fontWeight: FontWeight.bold,
+           fontSize: 15
+         ),
+        doneButtonBackgroundColor: Colors.grey,
+        doneButtonText: "Done",
+        skipButtonText: "Skip",
+        pageList: pageList,
+        onDoneButtonPressed: () =>
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => new LoginPage(),
+              ),
+            ),
+        onSkipButtonPressed: () =>
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => new LoginPage(),
+              ),
+            ),
+      ),
+    );
+  }
+}
+
 
