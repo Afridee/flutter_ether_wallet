@@ -58,23 +58,30 @@ class SwapTokenForTokenController extends GetxController{
     required String fromContractAddress,
     required String toContractAddress,
     required String from,
-    required String amountIn,
+    required double amountIn,
     required BuildContext context,
     required bool showDialogue
   }) async{
-    if(toContractAddress.length==42 && double.parse(amountIn=="" ? "0" : amountIn)>0){
+    print("network: " + network);
+    print("fromContractAddress: " + fromContractAddress);
+    print("toContractAddress: " + toContractAddress);
+    print("from: " + from);
+    print("amountIn: " + amountIn.toString());
+    print("minOutPercentage: " + minOutPercentage.toString());
+    if(toContractAddress.length==42){
       Map<String, dynamic> m = await estimateGasForSwappingTokenAPI(
         network : network,
         fromContractAddress : fromContractAddress,
         toContractAddress : toContractAddress,
         from : from,
-        amountIn : amountIn,
+        amountIn : amountIn, minOutPercentage: minOutPercentage,
       );
       if(m["error"]==null){
         estimatedGasNeeded = m['estimatedGasNeeded'];
         makeTheSwap = true;
         update();
       }else{
+        print(m["error"]);
         makeTheSwap = false;
         update();
         if(showDialogue){

@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:ether_wallet_flutter_app/functions/approveErc20TokenForSwappingAPI.dart';
 import 'package:ether_wallet_flutter_app/functions/estimateGasForApprovingTokenAPI.dart';
+import 'package:ether_wallet_flutter_app/functions/getTokenBalanceAPI.dart';
+import 'package:ether_wallet_flutter_app/models/getTokenBalanceModel.dart';
 import 'package:ether_wallet_flutter_app/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -23,14 +26,15 @@ class ApproveERC20tokenController extends GetxController {
         required String privateKey,
         required double gasPrice,
         required String from,
-        required String amountIn,
+        required double amountIn,
         required BuildContext context
       }
       ) async{
       if(allowButtonPress){
         allowButtonPress = false;
         update();
-        Map<String, dynamic> m = await approveErc20TokenForSwappingAPI(network: network, tokenAddress: tokenAddress, gas: estimatedGasNeeded, privateKey: privateKey, gasPrice: gasPrice, from: from, amountIn: amountIn);
+
+        Map<String, dynamic> m = await approveErc20TokenForSwappingAPI(network: network, tokenAddress: tokenAddress, gas: estimatedGasNeeded, privateKey: privateKey, gasPrice: gasPrice, from: from, amountIn: amountIn.toString());
         if(m['error']==null){
           Navigator.of(context).pop();
           FlutterClipboard.copy(m["transactionHash"]).then((value) => {
@@ -64,17 +68,20 @@ class ApproveERC20tokenController extends GetxController {
     required String network,
     required String tokenAddress,
     required String from,
-    required String amountIn,
+    required double amountIn,
   }) async {
+
     Map<String, dynamic> m = await estimateGasForApprovingTokenAPI(
         network: network,
         tokenAddress: tokenAddress,
         from: from,
-        amountIn: amountIn);
+        amountIn: amountIn.toString());
 
     if(m["error"]==null){
       estimatedGasNeeded = m["estimatedGasNeeded"];
       update();
+    }else{
+      print(m["error"]);
     }
   }
 }

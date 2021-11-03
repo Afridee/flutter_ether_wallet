@@ -12,8 +12,6 @@ import '../../utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-
-import 'MenuScreen.dart';
 import 'homePageTopPart.dart';
 
 class HomeScreen extends StatefulWidget {

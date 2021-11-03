@@ -7,7 +7,8 @@ Future<Map<String, dynamic>> estimateGasForSwappingTokenAPI(
       required String fromContractAddress,
       required String toContractAddress,
       required String from,
-      required String amountIn,
+      required double amountIn,
+      required int minOutPercentage
     }) async {
   final String baseUrl = dotenv.env['BASE_URL'].toString();
   var url = Uri.parse(baseUrl + '/estimations/estimateGasForSwappingToken');
@@ -21,7 +22,7 @@ Future<Map<String, dynamic>> estimateGasForSwappingTokenAPI(
       "toContractAddress" : toContractAddress,
       "from" : from,
       "amountIn" : amountIn,
-      "minOutPercentage" : 100
+      "minOutPercentage" : minOutPercentage
     }),
   );
 

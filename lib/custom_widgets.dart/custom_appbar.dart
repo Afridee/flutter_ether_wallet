@@ -1,5 +1,7 @@
+import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
 import 'package:ether_wallet_flutter_app/widgets/networks.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 
 import '../utils/constants.dart';
@@ -39,7 +41,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             onTap: (){
               Networks(context);
             },
-            child: Icon(Icons.explore),
+            child: GetBuilder<WalletController>(
+              builder: (wc){
+                return Row(
+                  children: [
+                    Text(wc.network, style: TextStyle(color: Colors.white),),
+                    SizedBox(width: 10),
+                    Icon(Icons.explore),
+                  ],
+                );
+              },
+            ),
           ),
         )
       ],

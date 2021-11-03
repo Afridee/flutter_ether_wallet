@@ -133,6 +133,7 @@ class WalletController extends GetxController {
     tokenList = [];
 
     tokenList.add(new GetTokenBalanceModel(
+        tokenAddress : "..",
         tokenSymbol: 'ETH',
         tokenName: 'ETH',
         balance: activeAccountEthBalance.toString(),

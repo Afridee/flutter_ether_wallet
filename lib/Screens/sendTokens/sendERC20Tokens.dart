@@ -4,18 +4,17 @@ import 'package:ether_wallet_flutter_app/Screens/ScanQRcode/ScanQrcode.dart';
 import 'package:ether_wallet_flutter_app/controllers/sendERC20TokenController.dart';
 import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
 import 'package:ether_wallet_flutter_app/functions/estimateGasPriceAPI.dart';
+import 'package:ether_wallet_flutter_app/models/getTokenBalanceModel.dart';
 import 'package:ether_wallet_flutter_app/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:ether_wallet_flutter_app/widgets/TextField1.dart';
 import 'package:get/get.dart';
 
 class SendERC20Tokens extends StatefulWidget {
-  final int tokenIndex;
-  final String tokenSymbol;
 
-  const SendERC20Tokens(
-      {Key? key, required this.tokenIndex, required this.tokenSymbol})
-      : super(key: key);
+  final GetTokenBalanceModel token;
+
+  const SendERC20Tokens({Key? key, required this.token}) : super(key: key);
 
   @override
   _SendERC20TokensState createState() => _SendERC20TokensState();
@@ -47,8 +46,7 @@ class _SendERC20TokensState extends State<SendERC20Tokens> {
         toAddress: toAddress.text,
         amountIn: double.parse(amountIn.text),
         context: context,
-        contractAddress:
-            walletController.eRC20TokenBox.getAt(widget.tokenIndex - 1) ?? '');
+        contractAddress: widget.token.tokenAddress);
   }
 
   @override
@@ -165,7 +163,7 @@ class _SendERC20TokensState extends State<SendERC20Tokens> {
               height: 30,
               child: Center(
                 child: Text(
-                  "Amount to send (in ${widget.tokenSymbol}) :",
+                  "Amount to send (in ${widget.token.tokenSymbol}) :",
                   style: TextStyle(fontSize: 16, color: Colors.grey),
                 ),
               ),
@@ -328,9 +326,7 @@ class _SendERC20TokensState extends State<SendERC20Tokens> {
                         network: walletController.network,
                         fromAddress: "0x" + walletController.activeAccount,
                         toAddress: toAddress.text.trim(),
-                        contractAddress: walletController.eRC20TokenBox
-                                .getAt(widget.tokenIndex - 1) ??
-                            '',
+                        contractAddress: widget.token.tokenAddress,
                         amountIn: double.parse(amountIn.text.trim()),
                         fromAddressPrivateKey: privateKey.text.trim(),
                         gasPrice: double.parse(gasPrice.text.trim()),

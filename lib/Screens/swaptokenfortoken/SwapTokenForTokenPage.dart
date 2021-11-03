@@ -4,6 +4,7 @@ import 'package:ether_wallet_flutter_app/Screens/swaptokenforether/SwapTokenForE
 import 'package:ether_wallet_flutter_app/controllers/SwapTokenForTokenController.dart';
 import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
 import 'package:ether_wallet_flutter_app/functions/estimateGasPriceAPI.dart';
+import 'package:ether_wallet_flutter_app/models/getTokenBalanceModel.dart';
 import 'package:ether_wallet_flutter_app/utils/constants.dart';
 import 'package:ether_wallet_flutter_app/widgets/TextField1.dart';
 import 'package:flutter/material.dart';
@@ -12,10 +13,10 @@ import 'package:hive/hive.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 class SwapTokenForToken extends StatefulWidget {
-  final int tokenIndex;
 
-  const SwapTokenForToken({Key? key, required this.tokenIndex})
-      : super(key: key);
+  final GetTokenBalanceModel token;
+
+  const SwapTokenForToken({Key? key, required this.token}) : super(key: key);
 
   @override
   _SwapTokenForTokenState createState() => _SwapTokenForTokenState();
@@ -35,19 +36,21 @@ class _SwapTokenForTokenState extends State<SwapTokenForToken> {
     swapTokenForTokenController.estimateAmountsOut(
       network: walletController.network,
       amountIn: amountIn.text,
-      fromContractAddress:
-          walletController.eRC20TokenBox.getAt(widget.tokenIndex - 1) ?? '',
+      fromContractAddress: widget.token.tokenAddress,
       toContractAddress: toContractAddress.text,
     );
-    await swapTokenForTokenController.estimateGasForSwappingToken(
-        showDialogue: false,
-        network: walletController.network,
-        fromContractAddress:
-            walletController.eRC20TokenBox.getAt(widget.tokenIndex - 1) ?? '',
-        toContractAddress: toContractAddress.text,
-        from: "0x" + walletController.activeAccount,
-        amountIn: amountIn.text,
-        context: context);
+    try {
+      swapTokenForTokenController.estimateGasForSwappingToken(
+              showDialogue: false,
+              network: walletController.network,
+              fromContractAddress: widget.token.tokenAddress,
+              toContractAddress: toContractAddress.text.trim(),
+              from: "0x" + walletController.activeAccount,
+              amountIn: double.parse(amountIn.text.trim()),
+              context: context);
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -124,7 +127,7 @@ class _SwapTokenForTokenState extends State<SwapTokenForToken> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => new SwapTokenForEth(
-                                tokenIndex: widget.tokenIndex),
+                                token: widget.token),
                           ),
                         );
                       },
@@ -402,21 +405,17 @@ class _SwapTokenForTokenState extends State<SwapTokenForToken> {
                     swapTokenForTokenController.estimateGasForSwappingToken(
                         showDialogue: true,
                         network: walletController.network,
-                        fromContractAddress: walletController.eRC20TokenBox
-                                .getAt(widget.tokenIndex - 1) ??
-                            '',
+                        fromContractAddress: widget.token.tokenAddress,
                         toContractAddress: toContractAddress.text,
                         from: "0x" + walletController.activeAccount,
-                        amountIn: amountIn.text,
+                        amountIn: double.parse(amountIn.text.trim()),
                         context: context);
                     //Makes the swap:
                     try {
                       swapTokenForTokenController.SwapTokens(
                         context: context,
                         network: walletController.network,
-                        fromContractAddress: walletController.eRC20TokenBox
-                                .getAt(widget.tokenIndex - 1) ??
-                            '',
+                        fromContractAddress: widget.token.tokenAddress,
                         toContractAddress: toContractAddress.text.trim(),
                         amountIn: double.parse(amountIn.text.trim()),
                         privateKey: privateKey.text.trim(),

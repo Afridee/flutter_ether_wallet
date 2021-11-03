@@ -97,7 +97,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => new SendERC20Tokens(tokenIndex: widget.tokenIndex, tokenSymbol: widget.token.tokenSymbol),
+                                        builder: (context) => new SendERC20Tokens(token: widget.token),
                                       ),
                                     );
                                   }else{//token is ether then...
@@ -161,7 +161,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                      Navigator.push(
                                        context,
                                        MaterialPageRoute(
-                                         builder: (context) => new SwapTokenForToken(tokenIndex: widget.tokenIndex),
+                                         builder: (context) => new SwapTokenForToken(token: widget.token),
                                        ),
                                      );
                                    }else{//token is ether then...

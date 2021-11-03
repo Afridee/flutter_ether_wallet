@@ -27,7 +27,7 @@ class _ApproveERC20tokenState extends State<ApproveERC20token> {
         network: walletController.network,
         tokenAddress: tokenAddress.text,
         from: "0x" + walletController.activeAccount,
-        amountIn: amountIn.text);
+        amountIn: double.parse(amountIn.text.trim()));
   }
 
   @override
@@ -305,7 +305,7 @@ class _ApproveERC20tokenState extends State<ApproveERC20token> {
                         privateKey: privateKey.text.trim(),
                         gasPrice: double.parse(gasPrice.text.trim()),
                         from: "0x" + walletController.activeAccount,
-                        amountIn: amountIn.text.trim(),
+                        amountIn: double.parse(amountIn.text.trim()),
                         context: context);
                   } catch (e) {
                     AwesomeDialog(

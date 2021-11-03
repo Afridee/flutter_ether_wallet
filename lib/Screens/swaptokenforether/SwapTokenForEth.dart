@@ -3,6 +3,7 @@ import 'package:ether_wallet_flutter_app/Screens/GetPrivateKey/getPrivateKey.dar
 import 'package:ether_wallet_flutter_app/controllers/swapTokenWithEtherController.dart';
 import 'package:ether_wallet_flutter_app/controllers/walletController.dart';
 import 'package:ether_wallet_flutter_app/functions/estimateGasPriceAPI.dart';
+import 'package:ether_wallet_flutter_app/models/getTokenBalanceModel.dart';
 import 'package:ether_wallet_flutter_app/utils/constants.dart';
 import 'package:ether_wallet_flutter_app/widgets/TextField1.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +12,10 @@ import 'package:hive/hive.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 class SwapTokenForEth extends StatefulWidget {
-  final int tokenIndex;
 
-  const SwapTokenForEth({Key? key, required this.tokenIndex}) : super(key: key);
+  final GetTokenBalanceModel token;
+
+  const SwapTokenForEth({Key? key, required this.token}) : super(key: key);
 
   @override
   _SwapTokenForEthState createState() => _SwapTokenForEthState();
@@ -32,16 +34,14 @@ class _SwapTokenForEthState extends State<SwapTokenForEth> {
     swapTokenWithEtherController.estimateAmountsOut(
       network: walletController.network,
       amountIn: amountIn.text,
-      fromContractAddress:
-          walletController.eRC20TokenBox.getAt(widget.tokenIndex - 1) ?? '',
+      fromContractAddress: widget.token.tokenAddress,
       toContractAddress:
           "0xc778417e063141139fce010982780140aa0cd5ab", //weth address
     );
     await swapTokenWithEtherController.estimateGasForSwappingTokenWithEther(
         showDialogue: false,
         network: walletController.network,
-        fromContractAddress:
-            walletController.eRC20TokenBox.getAt(widget.tokenIndex - 1) ?? '',
+        fromContractAddress: widget.token.tokenAddress,
         address: "0x" + walletController.activeAccount,
         amountIn: amountIn.text,
         context: context);
@@ -354,9 +354,7 @@ class _SwapTokenForEthState extends State<SwapTokenForEth> {
                         .estimateGasForSwappingTokenWithEther(
                             showDialogue: true,
                             network: walletController.network,
-                            fromContractAddress: walletController.eRC20TokenBox
-                                    .getAt(widget.tokenIndex - 1) ??
-                                '',
+                            fromContractAddress: widget.token.tokenAddress,
                             address: "0x" + walletController.activeAccount,
                             amountIn: amountIn.text,
                             context: context);
@@ -365,9 +363,7 @@ class _SwapTokenForEthState extends State<SwapTokenForEth> {
                       swapTokenWithEtherController.swapTokenWithEther(
                           context: context,
                           network: walletController.network,
-                          fromContractAddress: walletController.eRC20TokenBox
-                                  .getAt(widget.tokenIndex - 1) ??
-                              '',
+                          fromContractAddress: widget.token.tokenAddress,
                           amountIn: double.parse(amountIn.text.trim()),
                           privateKey: privateKey.text.trim(),
                           gasPrice: double.parse(gasPrice.text.trim()));
