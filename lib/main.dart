@@ -3,6 +3,7 @@ import 'package:fancy_on_boarding/fancy_on_boarding.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:hive/hive.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:path_provider/path_provider.dart';
@@ -18,6 +19,10 @@ void main() async{
   await Hive.openBox<Map>('userObj');
   await Hive.openBox<String>('ERC20Tokens');
   await Firebase.initializeApp();
+
+  if (Platform.isAndroid) {
+    await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
+  }
 
   OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
 
