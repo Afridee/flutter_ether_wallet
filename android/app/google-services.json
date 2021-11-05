@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "537721953352-fn4beptl2r538ulb33jub0lfbbstl5c1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ahmedafridee.ether_wallet_flutter_app",
+            "certificate_hash": "32a0560e70cf7cc46f340ee708f323bd42e49c41"
+          }
+        },
+        {
           "client_id": "537721953352-d70ojh7c7k4l1sq6gsaivq4ns56a6vk4.apps.googleusercontent.com",
           "client_type": 3
         }
