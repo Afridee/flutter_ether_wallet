@@ -6,7 +6,7 @@ import 'package:simple_icons/simple_icons.dart';
 final pageList = [
   PageModel(
     color: const Color(0xFFE6E6E6),
-    heroImagePath: 'assets/images/ic_launcher.png',
+    heroImagePath: 'assets/images/ic_onesignal_large_icon_default.png',
     title: Text('Walleth',
         style: TextStyle(
           fontWeight: FontWeight.w800,

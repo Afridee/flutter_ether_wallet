@@ -9,9 +9,9 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'Screens/LoginPage.dart';
 import 'Screens/OnboardingScreen/onboardingScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
   Directory Document = await getApplicationDocumentsDirectory();
@@ -19,6 +19,7 @@ void main() async{
   await Hive.openBox<Map>('userObj');
   await Hive.openBox<String>('ERC20Tokens');
   await Firebase.initializeApp();
+
 
   if (Platform.isAndroid) {
     await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
@@ -38,15 +39,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
       home: Onboardinscreen(),
@@ -62,37 +54,53 @@ class Onboardinscreen extends StatefulWidget {
 }
 
 class _OnboardinscreenState extends State<Onboardinscreen> {
+
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  late SharedPreferences prefs;
+  late bool onboardingShown = true;
+
+  initiate() async{
+    prefs = await _prefs;
+    setState(() {
+      onboardingShown = prefs.getBool('onboarded') ?? false;
+    });
+  }
+
+  @override
+  void initState() {
+    initiate();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return onboardingShown? LoginPage() : Scaffold(
       //Pass pageList and the mainPage route.
       body: FancyOnBoarding(
-         skipButtonTextStyle: TextStyle(
-           color: Colors.grey,
-           fontWeight: FontWeight.bold,
-           fontSize: 15
-         ),
-        doneButtonBackgroundColor: Colors.grey,
-        doneButtonText: "Done",
-        skipButtonText: "Skip",
-        pageList: pageList,
-        onDoneButtonPressed: () =>
+          skipButtonTextStyle: TextStyle(
+              color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 15),
+          doneButtonBackgroundColor: Colors.grey,
+          doneButtonText: "Done",
+          skipButtonText: "Skip",
+          pageList: pageList,
+          onDoneButtonPressed: (){
+            prefs.setBool("onboarded", true);
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => new LoginPage(),
               ),
-            ),
-        onSkipButtonPressed: () =>
+            );
+          },
+          onSkipButtonPressed: () {
+            prefs.setBool("onboarded", true);
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => new LoginPage(),
               ),
-            ),
-      ),
+            );
+          }),
     );
   }
 }
-
-
